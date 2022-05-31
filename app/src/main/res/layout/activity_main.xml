@@ -5,6 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,17 +21,6 @@
             android:layout_width="match_parent"
             android:gravity="center_horizontal"
             android:layout_height="match_parent">
-<!--                <com.google.android.material.appbar.AppBarLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content">-->
-<!--                   -->
-
-<!--                </com.google.android.material.appbar.AppBarLayout>-->
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="411dp"
-                android:layout_height="wrap_content"
-                app:menu="@menu/top_bar" />
 
             <CalendarView
                 android:id="@+id/calendarView"
@@ -44,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginBottom="10dp"
-                android:background="#3fc7d9"
+                android:background="@color/own_yellow"
                 android:textSize="18dp"
                 android:text="운동일기 작성하기" />
 
@@ -69,6 +59,7 @@
 <!--        <include layout="@layout/side_nav"/>-->
 
         <com.google.android.material.navigation.NavigationView
+            android:id="@+id/drawerNav"
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="right">
