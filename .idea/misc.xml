@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/choi/OWN/OWN/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/choi/OWN/OWN/app/src/main/res/layout/daily_workout_row.xml" value="0.4" />
+        <entry key="..\:/choi/OWN/OWN/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/choi/OWN/OWN/app/src/main/res/layout/daily_workout_row.xml" value="0.176" />
+        <entry key="..\:/choi/OWN/OWN/app/src/main/res/layout/level_grid.xml" value="0.4" />
+        <entry key="..\:/choi/OWN/OWN/app/src/main/res/layout/yolk_grid.xml" value="0.2" />
         <entry key="..\:/choi/OWN/OWN/app/src/main/res/menu/bottom_tab.xml" value="1.7392857142857143" />
+        <entry key="..\:/choi/OWN/OWN/app/src/main/res/menu/top_bar.xml" value="0.25364583333333335" />
       </map>
     </option>
   </component>
