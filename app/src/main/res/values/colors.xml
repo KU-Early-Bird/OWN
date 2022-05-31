@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="own_skyblue">#FF3FC7D9</color>
+    <color name="own_skyblue_dark">#FF229AAA</color>
+    <color name="own_yellow">#FFF8BB48</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
