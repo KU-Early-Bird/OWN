@@ -1,21 +1,28 @@
 package com.example.own
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.GridView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginTop
 import com.example.own.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding:ActivityMainBinding
-    var ownwanDays = 127
+    var ownwanDays = 155
     var yolkNum =0
     var level=0
     val YOLK_GRID_SIZE = 30
-    var yolks = ArrayList<Int>(YOLK_GRID_SIZE)
+    val LEVEL_GRID_SIZE = 10
+    var yolks = ArrayList<Int>()
+    val levels = ArrayList<Int>()
     lateinit var yolkGridAdapter:YolkGridAdapter
+    lateinit var levelGridAdapter:LevelGridAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,16 +32,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initLayer() {
-        level = ownwanDays/30
-        yolkNum = ownwanDays%30
+        level = (ownwanDays/YOLK_GRID_SIZE)
+        yolkNum = ownwanDays%YOLK_GRID_SIZE
 
         printAchieveSection()
 
 
         initYolkArr()
+        initLevelArr()
+
         yolkGridAdapter = YolkGridAdapter(this,yolks)
         binding.drawerNav.findViewById<GridView>(R.id.yolkGrid).adapter = yolkGridAdapter
 
+        levelGridAdapter = LevelGridAdapter(this,levels)
+        binding.drawerNav.findViewById<GridView>(R.id.levelGrid).adapter = levelGridAdapter
+    }
+
+    private fun initLevelArr() {
+        for(i: Int in 0..(LEVEL_GRID_SIZE-1)){
+            if(i<LEVEL_GRID_SIZE-level){
+                levels.add(0)
+            }else{
+                levels.add(1)
+            }
+        }
     }
 
     private fun initYolkArr(){
@@ -56,6 +77,9 @@ class MainActivity : AppCompatActivity() {
         // 레벨
         val levelView = findViewById<TextView>(R.id.levelNum)
         levelView.text = "Lv."+ level.toString()
+
+        (levelView.layoutParams as LinearLayout.LayoutParams).topMargin =pxToDp(100*(LEVEL_GRID_SIZE - level).toFloat())
+
         // level grid에도 반영
 
         // 노른자 개수
@@ -79,5 +103,10 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun pxToDp(pixel: Float):Int{
+        val density = resources.displayMetrics.density
+        return ( pixel/ density).toInt()
     }
 }

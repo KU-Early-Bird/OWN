@@ -64,12 +64,15 @@
             <TextView
                 android:id="@+id/levelNum"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:paddingVertical="10dp"
                 android:text="Lv.4"
                 android:textAlignment="center"
                 android:textSize="22dp" />
+
+
+
 
             <GridView
                 android:id="@+id/levelGrid"
