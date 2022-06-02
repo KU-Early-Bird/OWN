@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/background_btn.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/background_gradient.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/grin-stars-free-icon-font_24.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_baseline_fitness_center_24.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_deco_2_background.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_deco_3_background.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_deco_bg.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/icon_emoji1_background.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/icon_emoji2_background.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/icon_emoji3_background.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/icon_gym_background.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/meh-free-icon-font_24.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/drawable/sad-free-icon-font_24.xml" value="0.1375" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/custom_dialog.xml" value="0.264" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/fragment_dashboard.xml" value="0.176" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/fragment_home.xml" value="0.1578125" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/fragment_notifications.xml" value="0.1578125" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/fragment_workout.xml" value="0.536" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/layout/workout_row.xml" value="0.11955420466058764" />
+        <entry key="..\:/Users/Asus/Desktop/Bachelor of Computer Science/SEM 5/Mobile programming/TeamPel_1/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

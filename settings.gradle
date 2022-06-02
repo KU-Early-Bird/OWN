@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "OWN"
+rootProject.name = "TeamPel_1"
 include ':app'
