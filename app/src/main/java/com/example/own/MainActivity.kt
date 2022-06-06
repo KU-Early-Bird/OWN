@@ -2,24 +2,37 @@ package com.example.own
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Debug
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.GridView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.own.databinding.ActivityMainBinding
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
+    // const
     companion object{
         const val YOLK_GRID_SIZE = 30
         const val LEVEL_GRID_SIZE = 10
     }
 
+    // ownList members
+    lateinit var ownListAdapter: OwnListAdapter
+    val ownList=ArrayList<OwnListData>()
+    // 기록 DB Helper
+    // 운동 DB Helper
+    // 루틴 DB Helper
+
+
+    // achieve members
     lateinit var binding:ActivityMainBinding
     var ownwanDays = 155
     var yolkNum =0
@@ -29,11 +42,8 @@ class MainActivity : AppCompatActivity() {
     val levels = ArrayList<Int>()
     lateinit var yolkGridAdapter:YolkGridAdapter
     lateinit var levelGridAdapter:LevelGridAdapter
-    lateinit var achieveDBHelper : OwnDBHelper
-    lateinit var ownListAdapter: OwnListAdapter
-    val ownList=ArrayList<OwnListData>()
+    lateinit var achieveDBHelper : OwnDBHelper // 성취 DB Helper
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -42,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         initLayer()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun initDB() {
         // achieve data
         achieveDBHelper = OwnDBHelper(this)
@@ -78,8 +87,102 @@ class MainActivity : AppCompatActivity() {
         // achieve 영역 초기화
         initAchieveSection()
 
+        // ownList adapter 초기화
+        initOwnList()
+
+        // Calender 초기화 - 항상 initOwnList 보다 뒤에 와야 함
+        initCalender()
+
+    }
+
+    private fun initCalender(){
+        // calender click 이벤트
+
+        binding.calendarView.isLongClickable = true;
+
+        // 안 먹힘
+//        binding.calendarView.setOnLongClickListener {
+//            Toast.makeText(applicationContext, "long Click", Toast.LENGTH_SHORT).show()
+//            true
+//        }
+        binding.calendarView.setOnDateChangeListener {  view, year, month, dayOfMonth->
+
+            val today = Calendar.getInstance()
+           // Toast.makeText(applicationContext, view.getChildAt(0), Toast.LENGTH_LONG).show()
+
+
+//            view.focusedChild.setOnLongClickListener {
+//                Toast.makeText(applicationContext, "long Click", Toast.LENGTH_SHORT).show()
+//                true
+//            }
+
+            val clickedDate = GregorianCalendar(year,month,dayOfMonth)
+            val todayDate = GregorianCalendar(today.get(Calendar.YEAR),today.get(Calendar.MONTH),today.get(Calendar.DAY_OF_MONTH) )
+
+            // 과거
+            if(clickedDate.before(todayDate)){
+                // 운동 완료 버튼 안보이게 처리 (자동 완료 처리되기 때문)
+                binding.completeWorkout.visibility = View.GONE
+
+                // 운동 데이터 - 날짜에 해당하는 데이터 불러오기
+                // ownList = 날짜 데이터 반환 값(리스트)
+                // ownListAdapter.notifyDataSetChanged()
+
+                // 기록 데이터 - boolean 값 반환하도록
+                val didRecorded = false; // 여기다 대입
+                if(didRecorded){
+                    binding.writeDiary.visibility = View.GONE
+                }else{
+                    binding.writeDiary.visibility = View.VISIBLE
+                }
+
+                // Test
+                Toast.makeText(this,"과거",Toast.LENGTH_SHORT).show()
+
+            }
+            // 미래
+            else if(clickedDate.after(todayDate)){
+                // 운동 완료 & 기록 작성 버튼 안보이도록
+                binding.apply {
+                    writeDiary.visibility = View.GONE
+                    completeWorkout.visibility =View.GONE
+                }
+
+                // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
+
+            }
+            // 현재
+            else{
+                // 운동 완료 여부와 기록 여부에 따라  - 운동 DB & 기록 DB 에서 받아오기(?)
+                val didComplete = false;
+                val didRecorded = false;
+                binding.apply {
+                    if(!didComplete){
+                        completeWorkout.visibility = View.VISIBLE
+                        writeDiary.visibility = View.GONE
+                    }else if(didComplete && !didRecorded){
+                        completeWorkout.visibility = View.GONE
+                        writeDiary.visibility = View.VISIBLE
+                    }else if (didComplete && didRecorded){
+                        completeWorkout.visibility = View.GONE
+                        writeDiary.visibility = View.GONE
+                    }
+
+                }
+                // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
+                Toast.makeText(this,"현재",Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
+
+
+
+    }
+
+    private fun initOwnList(){
         // 캘린더 클릭 이벤트
-        // 클릭 시 마다 배열 새로 할건지?
+        // 클릭 시 마다 배열 새로
         ownList.add(OwnListData("202020",true, "팔굽혀펴기","어깨", 5,1))
         ownList.add(OwnListData("202020",true, "달리기","다리", 1,2))
         ownList.add(OwnListData("202020",true, "플랭크","코어", 3,3))
@@ -89,12 +192,9 @@ class MainActivity : AppCompatActivity() {
             ownListRecyclerView.layoutManager =LinearLayoutManager(parent, LinearLayoutManager.VERTICAL,false)
             ownListRecyclerView.adapter = ownListAdapter
         }
-
-
-
-
     }
 
+    /* 성취 영역 구현 ---- 추후 깔끔하게 수정하기 */
     private fun initAchieveSection(){
         ownwanDays = achieveTableData.ownwanDays
         level = (ownwanDays/YOLK_GRID_SIZE)
@@ -176,3 +276,7 @@ class MainActivity : AppCompatActivity() {
         return ( pixel/ density).toInt()
     }
 }
+
+//private fun CalendarView.setOnLongClickListener(function: (View) -> Unit) {
+//
+//}

@@ -27,6 +27,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/completeWorkout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/own_yellow"
+                android:textSize="18dp"
+                android:text="오 운 완 🔥" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/writeDiary"
@@ -34,9 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginBottom="10dp"
-                android:background="@color/own_yellow"
+                android:background="@color/own_brown"
                 android:textSize="18dp"
-                android:text="운동일기 작성하기" />
+                android:text="운동일기 작성하기 📝" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ownListRecyclerView"

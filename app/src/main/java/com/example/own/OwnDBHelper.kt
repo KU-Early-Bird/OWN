@@ -85,7 +85,7 @@ class OwnDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME, null
         val strSql = "delete from $TABLE_NAME;"
         val db = writableDatabase
         val cursor = db.rawQuery(strSql,null)
-        Toast.makeText(context, cursor.count.toString(), Toast.LENGTH_LONG).show()
+//        Toast.makeText(context, cursor.count.toString(), Toast.LENGTH_LONG).show()
         cursor.close()
         db.close()
         insertRecord(ownwanDays)
