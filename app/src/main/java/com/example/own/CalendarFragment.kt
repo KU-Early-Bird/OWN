@@ -44,6 +44,10 @@ class CalendarFragment : Fragment() {
     lateinit var achieveDBHelper : OwnDBHelper // 성취 DB Helper
 
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,16 +70,26 @@ class CalendarFragment : Fragment() {
 
     private fun initDB() {
         // achieve data
+<<<<<<< Updated upstream
         achieveDBHelper = OwnDBHelper(activity)
         achieveTableData = achieveDBHelper.readCurRecord()
+=======
+        //achieveDBHelper = OwnDBHelper(activity)
+        achieveTableData = (activity as MainActivity).dbhelper.readCurRecord()
+>>>>>>> Stashed changes
 
         // 현재 날짜 보다 전날이면 그다음날 부터 오늘까지 운동데이터 조회해서 운동했는지 확인
         // 날짜 이상~이하인 것들 select
         // 운동 완료된 것이 하나 이상 존재하면 노른자 증가 -> 다음 날짜 조회
 
         // ownwanDays 업데이트
+<<<<<<< Updated upstream
         achieveDBHelper.updateRecord(940) // test
         achieveTableData = achieveDBHelper.readCurRecord()
+=======
+        (activity as MainActivity).dbhelper.updateRecord(940) // test
+        achieveTableData = (activity as MainActivity).dbhelper.readCurRecord()
+>>>>>>> Stashed changes
         Toast.makeText(activity,achieveTableData.toString(),Toast.LENGTH_LONG).show()
 //        Log.v("this", achieveTableData.ownwanDays.toString())
         // 폰 켤 때마다 루틴 데이터 읽어서 오늘 조건에 맞는거 보여주기

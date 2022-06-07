@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/DiaryReadContainer">
+
+
+    <RelativeLayout
+        android:id="@+id/readDiary"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/DiaryReadImage"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerHorizontal="true"
+            android:background="#A1A7B1"
+            tools:srcCompat="@drawable/ic_baseline_report_24" />
+
+        <TextView
+            android:id="@+id/DiaryContent"
+            android:layout_width="300dp"
+            android:layout_height="140dp"
+            android:layout_below="@id/DiaryReadImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:maxLines="3"
+            android:minLines="3"
+            android:text="일기 표시 내용" />
+
+        <TextView
+            android:id="@+id/DiaryDate"
+            android:layout_width="255dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/DiaryContent"
+            android:layout_alignStart="@+id/DiaryContent"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:text="0000년 00월 00일"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/DiaryContent"
+            android:layout_marginStart="-1dp"
+            android:layout_marginTop="-1dp"
+            android:layout_toEndOf="@+id/DiaryDate"
+            android:src="?attr/actionModeShareDrawable" />
+
+    </RelativeLayout>
+
+</LinearLayout>

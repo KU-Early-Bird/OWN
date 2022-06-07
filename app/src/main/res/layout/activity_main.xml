@@ -7,9 +7,15 @@
         android:layout_height="match_parent"
         android:background="#00FFFFFF"
         tools:context=".MainActivity">
+<<<<<<< Updated upstream
     <androidx.fragment.app.FragmentContainerView
         android:name="com.example.own.CalendarFragment"
         android:id="@+id/calendarFragment"
+=======
+    <FrameLayout
+        android:name="com.example.own.CalendarFragment"
+        android:id="@+id/container"
+>>>>>>> Stashed changes
         android:layout_width="match_parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         android:layout_height="match_parent"
