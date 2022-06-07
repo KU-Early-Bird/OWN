@@ -7,14 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-<<<<<<< Updated upstream
-
-class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-=======
 import com.example.own.Diary.DiaryData
 
+//class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+//=======
+
 class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
->>>>>>> Stashed changes
     companion object{
         val DB_NAME = "ownDB.db"
         val DB_VERSION =1
@@ -38,11 +36,9 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 데이터 베이스 생성시 테이블 없다면 생성
     override fun onCreate(db: SQLiteDatabase?) {
-<<<<<<< Updated upstream
-        val create_table ="create table if not exists $TABLE_NAME(" +
-=======
+
         var create_table ="create table if not exists $TABLE_NAME(" +
->>>>>>> Stashed changes
+
                 "$LAST_UPDATE date primary key default (date('now')), " +
                 "$OWNWAN_DAYS integer);"
         db!!.execSQL(create_table) // SQL에서 실행해라! - 테이블 생성
