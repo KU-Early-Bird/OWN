@@ -44,7 +44,6 @@ class CalendarFragment : Fragment() {
     lateinit var levelGridAdapter:LevelGridAdapter
     lateinit var achieveDBHelper : OwnDBHelper // 성취 DB Helper
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,8 +67,10 @@ class CalendarFragment : Fragment() {
 
     private fun initDB() {
         // achieve data
-        achieveDBHelper = OwnDBHelper(activity)
-        achieveTableData = achieveDBHelper.readCurRecord()
+        achieveDBHelper = OwnDBHelper(activity as MainActivity)
+//        achieveTableData = achieveDBHelper.readCurRecord()
+        //achieveDBHelper = OwnDBHelper(activity)
+        achieveTableData = (activity as MainActivity).dbhelper.readCurRecord()
 
         if(achieveTableData.lastUpdateDate == null)
             achieveDBHelper.updateRecord(0,false)
