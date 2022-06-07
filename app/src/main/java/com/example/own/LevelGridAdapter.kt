@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
 
 
-class LevelGridAdapter(val context: Context, val levels:ArrayList<Int>): BaseAdapter() {
+class LevelGridAdapter(val context: FragmentActivity?, val levels:ArrayList<Int>): BaseAdapter() {
 
     override fun getCount(): Int {
         return levels.size

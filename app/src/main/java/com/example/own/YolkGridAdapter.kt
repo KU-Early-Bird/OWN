@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
 
 
-class YolkGridAdapter(val context: Context, val yolks:ArrayList<Int>): BaseAdapter() {
+class YolkGridAdapter(val context: FragmentActivity?, val yolks:ArrayList<Int>): BaseAdapter() {
     override fun getCount(): Int {
         return yolks.size
     }
