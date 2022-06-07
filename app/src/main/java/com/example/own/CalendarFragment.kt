@@ -1,6 +1,7 @@
 package com.example.own
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.own.databinding.FragmentCalenderBinding
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,7 +51,7 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCalenderBinding.inflate(layoutInflater,container ,false)
+        binding = FragmentCalenderBinding.inflate(layoutInflater,container,false)
         return binding!!.root
     }
 
@@ -116,18 +118,25 @@ class CalendarFragment : Fragment() {
     }
 
     private fun initCalender(){
+        // 기본 선택
+        binding!!.apply {
+            calendarView.selectedDate = CalendarDay.today()
+            calendarView.selectionColor = Color.parseColor("#FFF8BB48")
+            calendarView.addDecorator(CurrentDayDecorator(activity))
+            calendarView.addDecorator(RecordedDateDecorator(ArrayList<CalendarDay>())) // 기록있는 날짜들만 넣기
+        }
+
+
         // calender click 이벤트
-
-        binding!!.calendarView.isLongClickable = true;
-        binding!!.calendarView.setOnDateChangeListener {  view, year, month, dayOfMonth->
-
+//        binding!!.calendarView.isLongClickable = true;
+        binding!!.calendarView.setOnDateChangedListener { _, date, selected ->
             if(today == null)
                 today = getTodayGregorian()
 
-            val clickedDate = GregorianCalendar(year,month,dayOfMonth)
+            val clickedDate = GregorianCalendar(date.year,date.month-1,date.day)
 
             // 과거
-            if(clickedDate.before(today)){
+            if(clickedDate.compareTo(today)<0){
                 // 운동 완료 버튼 안보이게 처리 (자동 완료 처리되기 때문)
                 binding!!.completeWorkout.visibility = View.GONE
 
@@ -148,7 +157,7 @@ class CalendarFragment : Fragment() {
 
             }
             // 미래
-            else if(clickedDate.after(today)){
+            else if(clickedDate.compareTo(today)>0){
                 // 운동 완료 & 기록 작성 버튼 안보이도록
                 binding!!.apply {
                     writeDiary.visibility = View.GONE
@@ -156,6 +165,8 @@ class CalendarFragment : Fragment() {
                 }
 
                 // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
+                // Test
+                Toast.makeText(activity,"미래", Toast.LENGTH_SHORT).show()
 
             }
             // 현재
@@ -179,6 +190,16 @@ class CalendarFragment : Fragment() {
                 // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
                 Toast.makeText(activity,"현재", Toast.LENGTH_SHORT).show()
             }
+
+        }
+
+        // long Click 이벤트
+        binding!!.calendarView.setOnDateLongClickListener { view, date ->
+            // 꾹 누른 날 선택되도록
+            view.selectedDate = date
+
+            // 만약 기록 있다면
+            // if(has diary)
 
         }
 
