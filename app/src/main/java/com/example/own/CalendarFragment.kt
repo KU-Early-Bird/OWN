@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.databinding.FragmentCalenderBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.util.*
@@ -30,9 +31,7 @@ class CalendarFragment : Fragment() {
     // ownList members
     lateinit var ownListAdapter: OwnListAdapter
     val ownList=ArrayList<OwnListData>()
-    // 기록 DB Helper
-    // 운동 DB Helper
-    // 루틴 DB Helper
+    var didRecord = false
 
     // achieve members
     var binding:FragmentCalenderBinding ?=null
@@ -44,7 +43,7 @@ class CalendarFragment : Fragment() {
     val levels = ArrayList<Int>()
     lateinit var yolkGridAdapter:YolkGridAdapter
     lateinit var levelGridAdapter:LevelGridAdapter
-    lateinit var achieveDBHelper : OwnDBHelper // 성취 DB Helper
+    lateinit var ownDBHelper : OwnDBHelper // 성취 DB Helper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,13 +68,11 @@ class CalendarFragment : Fragment() {
 
     private fun initDB() {
         // achieve data
-        achieveDBHelper = OwnDBHelper(activity as MainActivity)
-//        achieveTableData = achieveDBHelper.readCurRecord()
-        //achieveDBHelper = OwnDBHelper(activity)
+        ownDBHelper = OwnDBHelper(activity as MainActivity)
         achieveTableData = (activity as MainActivity).dbhelper.readAchieve()
 
         if(achieveTableData.lastUpdateDate == null)
-            achieveDBHelper.updateAchieve(0,false)
+            ownDBHelper.updateAchieve(0,false)
         else{
             var yolkToAdd = 0
 
@@ -87,14 +84,17 @@ class CalendarFragment : Fragment() {
             }
 
             // achieve 데이터 업데이트
-            achieveDBHelper.updateAchieve(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
-            achieveTableData = achieveDBHelper.readAchieve()
+            ownDBHelper.updateAchieve(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
+            achieveTableData = ownDBHelper.readAchieve()
         }
 
 
         // 오늘 날짜 ownList 가져오기
         // 폰 켤 때마다 루틴 데이터 읽어서 오늘 조건에 맞는거 보여주기
         // 과거 할일 : 운동 완료 누르면 그날 루틴 데이터 최종 저장
+
+        // 오늘 기록 했는지 저장
+        //didRecord =
 
     }
 
@@ -110,6 +110,33 @@ class CalendarFragment : Fragment() {
         // Calender 초기화 - 항상 initOwnList 보다 뒤에 와야 함
         initCalender()
 
+        // btn 초기화
+        initButton()
+
+    }
+
+    private fun initButton() {
+        binding!!.apply {
+            // 완료 상태에 따라 버튼 다르게 보이기
+            if(!achieveTableData.didWorkout){
+                writeDiary.visibility = View.VISIBLE
+                completeWorkout.visibility= View.GONE
+            }else if(achieveTableData.didWorkout && !didRecord){
+                writeDiary.visibility = View.GONE
+                completeWorkout.visibility= View.VISIBLE
+            }else if(achieveTableData.didWorkout && didRecord) {
+                writeDiary.visibility = View.GONE
+                completeWorkout.visibility = View.GONE
+            }
+
+            writeDiary.setOnClickListener{
+                parentFragmentManager.beginTransaction().apply{
+                    replace(R.id.container, DiaryWriteFragment())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+        }
     }
 
     private fun getTodayGregorian():GregorianCalendar{
