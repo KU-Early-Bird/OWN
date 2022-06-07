@@ -72,10 +72,10 @@ class CalendarFragment : Fragment() {
         achieveDBHelper = OwnDBHelper(activity as MainActivity)
 //        achieveTableData = achieveDBHelper.readCurRecord()
         //achieveDBHelper = OwnDBHelper(activity)
-        achieveTableData = (activity as MainActivity).dbhelper.readCurRecord()
+        achieveTableData = (activity as MainActivity).dbhelper.readAchieve()
 
         if(achieveTableData.lastUpdateDate == null)
-            achieveDBHelper.updateRecord(0,false)
+            achieveDBHelper.updateAchieve(0,false)
         else{
             var yolkToAdd = 0
 
@@ -87,8 +87,8 @@ class CalendarFragment : Fragment() {
             }
 
             // achieve 데이터 업데이트
-            achieveDBHelper.updateRecord(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
-            achieveTableData = achieveDBHelper.readCurRecord()
+            achieveDBHelper.updateAchieve(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
+            achieveTableData = achieveDBHelper.readAchieve()
         }
 
 
