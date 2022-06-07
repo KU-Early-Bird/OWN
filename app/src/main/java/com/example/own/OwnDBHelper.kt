@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object{
@@ -16,23 +18,27 @@ class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB
         val TABLE_NAME = "achieve"
         val LAST_UPDATE ="lastUpdate"
         val OWNWAN_DAYS ="ownwanDays"
+        val DID_COMPLETE = "didComplete"
     }
+
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     // 데이터 베이스 생성시 테이블 없다면 생성
     override fun onCreate(db: SQLiteDatabase?) {
         val create_table ="create table if not exists $TABLE_NAME(" +
                 "$LAST_UPDATE date primary key default (date('now')), " +
-                "$OWNWAN_DAYS integer);"
+                "$OWNWAN_DAYS integer," +
+                "$DID_COMPLETE tinyint );"
 
         db!!.execSQL(create_table) // SQL에서 실행해라! - 테이블 생성
     }
 
-    public  fun initData(){
-        val achieveData = readCurRecord()
-        if(achieveData.lastUpdateDate == null){
-            insertRecord(0)
-        }
-    }
+//    public  fun initData(){
+//        val achieveData = readCurRecord()
+//        if(achieveData.lastUpdateDate == null){
+//            insertRecord(0,0)
+//        }
+//    }
 
     // 테이블 업그레이드 시 실행 내용
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -52,13 +58,15 @@ class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB
         cursor.moveToFirst()
 
         if (cursor.count ==0)
-            return AchieveTableData(null,0 )
+            return AchieveTableData(null,0,false )
 
 //        Toast.makeText(context, cursor.count.toString(), Toast.LENGTH_LONG).show()
-        val lateUpdate=cursor.getString(0)
-        val ownwanDays = cursor.getString(1)
+        val lateUpdate=getCalendarObj(cursor.getString(0))
+        val ownwanDays = cursor.getString(1).toInt()
+        val didComplete = getDidComplete(cursor.getString(2).toInt())
 
-        val achieveData = AchieveTableData(lateUpdate, ownwanDays.toInt())
+
+        val achieveData = AchieveTableData(lateUpdate, ownwanDays, didComplete)
 
         cursor.close()
         db.close()
@@ -66,10 +74,23 @@ class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB
         return achieveData
     }
 
-    public fun insertRecord(ownwanDays:Int) : Boolean{
+    private fun getDidComplete(flag:Int):Boolean{
+        return flag == 1
+    }
+
+    private fun getCalendarObj(dateStr:String):GregorianCalendar{
+        var dateList = dateStr.split('-')
+
+        val date = dateFormat.parse(dateStr)
+        return GregorianCalendar(dateList[0].toInt(), dateList[1].toInt(),dateList[2].toInt())
+    }
+
+    public fun insertRecord(ownwanDays:Int,didComplete:Int) : Boolean{
         val values = ContentValues()
-//        values.put(LAST_UPDATE, )
+
         values.put(OWNWAN_DAYS,ownwanDays) // ownwanDays
+        values.put(DID_COMPLETE,didComplete)
+
         val db = writableDatabase
 
         // 오류나면 -1 반환,
@@ -96,9 +117,11 @@ class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB
     }
 
     // 테이블 내용 업데이트 하기
-    public fun updateRecord(ownwanDays:Int){
+    public fun updateRecord(ownwanDays:Int,didComplete: Boolean){
         deleteRecord()
-        insertRecord(ownwanDays)
+        var didCompleteFlag = 0
+        if(didComplete) didCompleteFlag=1 else didCompleteFlag=0
+        insertRecord(ownwanDays,didCompleteFlag)
     }
 
 }

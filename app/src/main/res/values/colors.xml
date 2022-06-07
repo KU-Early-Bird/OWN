@@ -2,9 +2,15 @@
 <resources>
 
     <color name="own_skyblue">#FF3FC7D9</color>
-    <color name="own_skyblue_dark">#FF229AAA</color>
+    <color name="own_skyblue_defaultBack">#8F62EEF3</color>
+    <color name="own_skyblue_darkBack">#A490CAD1</color>
+    <color name="own_skyblue_dark">#C6067280</color>
     <color name="own_yellow">#FFF8BB48</color>
+    <color name="own_skyblue_item_done">#A614B2C6</color>
     <color name="own_brown">#FFC7A17D</color>
+    <color name="own_text_light">#756868</color>
+    <color name="own_text_dark">#FF4C4242</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
