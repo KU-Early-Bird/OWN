@@ -8,10 +8,12 @@
         android:background="#00FFFFFF"
         tools:context=".MainActivity">
     <androidx.fragment.app.FragmentContainerView
-        android:name="com.example.own.CalenderFragment"
+        android:name="com.example.own.CalendarFragment"
         android:id="@+id/calendarFragment"
         android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         android:layout_height="match_parent"
+
         />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerLayout"
-    tools:context=".CalenderFragment">
+    tools:context=".CalendarFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,11 +48,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ownListRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-
+                android:layout_height="223dp"
+                android:layout_marginBottom="60dp"
                 android:layout_marginHorizontal="30dp"
-                />
+
+                android:layout_weight="1" />
 
 
         </LinearLayout>
