@@ -5,8 +5,9 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 
-class OwnDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object{
         val DB_NAME = "ownDB.db"
         val DB_VERSION =1
@@ -20,7 +21,7 @@ class OwnDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME, null
     // 데이터 베이스 생성시 테이블 없다면 생성
     override fun onCreate(db: SQLiteDatabase?) {
         val create_table ="create table if not exists $TABLE_NAME(" +
-                "$LAST_UPDATE datetime primary key default (datetime('now','localtime')), " +
+                "$LAST_UPDATE date primary key default (date('now')), " +
                 "$OWNWAN_DAYS integer);"
 
         db!!.execSQL(create_table) // SQL에서 실행해라! - 테이블 생성
@@ -80,14 +81,23 @@ class OwnDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME, null
         return flag
     }
 
-    // 테이블 내용 업데이트 하기
-    public fun updateRecord(ownwanDays:Int){
+    public fun deleteRecord(){
         val strSql = "delete from $TABLE_NAME;"
         val db = writableDatabase
-        val cursor = db.rawQuery(strSql,null)
-//        Toast.makeText(context, cursor.count.toString(), Toast.LENGTH_LONG).show()
-        cursor.close()
+//        val cursor = db.rawQuery(strSql,null)
+        var flag = db.delete(TABLE_NAME,null,null)
+//        if(flag==-1)
+//            Toast.makeText(context,"fail",Toast.LENGTH_LONG).show()
+//        else
+//            Toast.makeText(context,"success",Toast.LENGTH_LONG).show()
+
+//        cursor.close()
         db.close()
+    }
+
+    // 테이블 내용 업데이트 하기
+    public fun updateRecord(ownwanDays:Int){
+        deleteRecord()
         insertRecord(ownwanDays)
     }
 
