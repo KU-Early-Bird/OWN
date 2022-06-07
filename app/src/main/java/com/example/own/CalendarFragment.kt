@@ -2,6 +2,7 @@ package com.example.own
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.GridView
@@ -13,7 +14,7 @@ import com.example.own.databinding.FragmentCalenderBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CalenderFragment : Fragment() {
+class CalendarFragment : Fragment() {
     // const
     companion object{
         const val YOLK_GRID_SIZE = 30
@@ -60,12 +61,12 @@ class CalenderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDB()
-//        initLayer()
+        initLayer()
     }
 
     private fun initDB() {
         // achieve data
-        achieveDBHelper = OwnDBHelper(mainActivity)
+        achieveDBHelper = OwnDBHelper(activity)
         achieveTableData = achieveDBHelper.readCurRecord()
 
         // 현재 날짜 보다 전날이면 그다음날 부터 오늘까지 운동데이터 조회해서 운동했는지 확인
@@ -73,9 +74,10 @@ class CalenderFragment : Fragment() {
         // 운동 완료된 것이 하나 이상 존재하면 노른자 증가 -> 다음 날짜 조회
 
         // ownwanDays 업데이트
-//        achieveDBHelper.updateRecord(940) // test
+        achieveDBHelper.updateRecord(940) // test
         achieveTableData = achieveDBHelper.readCurRecord()
-
+        Toast.makeText(activity,achieveTableData.toString(),Toast.LENGTH_LONG).show()
+//        Log.v("this", achieveTableData.ownwanDays.toString())
         // 폰 켤 때마다 루틴 데이터 읽어서 오늘 조건에 맞는거 보여주기
         // 과거 할일 : 운동 완료 누르면 그날 루틴 데이터 최종 저장
 
