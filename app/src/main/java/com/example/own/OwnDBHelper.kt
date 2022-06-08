@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.example.own.Diary.DiaryData
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import kotlin.collections.ArrayList
 
 
 class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -39,6 +40,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     val dateFormat = SimpleDateFormat("yyyy-M-d")
+    val workoutDateFormat = SimpleDateFormat("yyyy-MM-dd")
     val tempDateFormat = SimpleDateFormat("yyyy.MM.dd")
 
     lateinit var DiaryList:ArrayList<DiaryData>
@@ -256,4 +258,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
         return diary_item
     }
+
+
+
 }
