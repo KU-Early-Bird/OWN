@@ -10,11 +10,13 @@ import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.own.Diary.DiaryData
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.databinding.FragmentCalenderBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,6 +29,8 @@ class CalendarFragment : Fragment() {
 
     // calendar
     var today:GregorianCalendar?=null
+    var clickedDate:GregorianCalendar?=null
+    val dateFomatter = SimpleDateFormat("yyyy-MM-dd")
 
     lateinit var mainActivity: MainActivity
 
@@ -64,6 +68,7 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         today = getTodayGregorian()
+        clickedDate = getTodayGregorian()
         initDB()
         initLayer()
     }
@@ -133,6 +138,12 @@ class CalendarFragment : Fragment() {
             }
 
             writeDiary.setOnClickListener{
+                //bundled data will be sent across fragment
+                val date = dateFomatter.format(clickedDate!!.time)
+                var bundle = Bundle()
+                bundle.putString("date", date)
+                setFragmentResult("DiaryWrite", bundle)
+
                 parentFragmentManager.beginTransaction().apply{
                     replace(R.id.container, DiaryWriteFragment())
                     addToBackStack(null)
@@ -164,11 +175,11 @@ class CalendarFragment : Fragment() {
                 today = getTodayGregorian()
             
 
-            val clickedDate = GregorianCalendar(date.year,date.month-1,date.day)
-            diaryData = ownDBHelper.getDiaryData(clickedDate); // 기록 데이터 존재여부 확인
+            clickedDate = GregorianCalendar(date.year,date.month-1,date.day)
+            diaryData = ownDBHelper.getDiaryData(clickedDate!!); // 기록 데이터 존재여부 확인
 
             // 과거
-            if(clickedDate.compareTo(today)<0){
+            if(clickedDate!!.compareTo(today)<0){
                 // 운동 완료 버튼 안보이게 처리 (자동 완료 처리되기 때문)
                 binding!!.completeWorkout.visibility = View.GONE
 
@@ -188,7 +199,7 @@ class CalendarFragment : Fragment() {
 
             }
             // 미래
-            else if(clickedDate.compareTo(today)>0){
+            else if(clickedDate!!.compareTo(today)>0){
                 // 운동 완료 & 기록 작성 버튼 안보이도록
                 binding!!.apply {
                     writeDiary.visibility = View.GONE
