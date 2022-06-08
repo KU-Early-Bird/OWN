@@ -234,7 +234,6 @@ class CalendarFragment : Fragment() {
             if(diaryData!=null){
                 DiaryDialog(diaryData!!)
                     .show(parentFragmentManager,"DiaryDlg")
-
             }
 
 

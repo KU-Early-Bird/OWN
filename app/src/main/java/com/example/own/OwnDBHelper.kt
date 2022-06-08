@@ -29,7 +29,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val DIARYIMAGE = "DIARY_IMAGE"
     }
 
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    val dateFormat = SimpleDateFormat("yyyy-M-d")
     val tempDateFormat = SimpleDateFormat("yyyy.MM.dd")
 
     lateinit var DiaryList:ArrayList<DiaryData>
