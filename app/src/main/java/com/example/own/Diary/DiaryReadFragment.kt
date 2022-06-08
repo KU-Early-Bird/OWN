@@ -17,7 +17,7 @@ class DiaryReadFragment : Fragment() {
     var diarydate = "temporary"
     var diarycontent = "temporary content"
     //datapath will be changed as package name changes (com.example.myapplication)
-    var imagepath = "data/data/com.example.own/files/2022-6-6.jpg"
+    var imagepath = "data/data/com.example.own/files/2022-6-8.jpg"
     lateinit var binding: FragmentDiaryReadBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

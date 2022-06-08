@@ -1,5 +1,6 @@
 package com.example.own
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.own.Diary.DiaryData
 import com.example.own.databinding.DiaryDialogBinding
+import java.io.File
 
 
 class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
@@ -35,6 +37,11 @@ class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
 
         binding.apply {
             // 이미지 소스로 이미지 보여주기
+            var imagePath=diaryData.Diary_Image
+            if (File(imagePath).exists()) {
+                var bitmap = BitmapFactory.decodeFile(imagePath)
+                binding.diaryDlgImg.setImageBitmap(bitmap)
+            }
 
             // 일기 내용
             diaryDlgtext.text = diaryData.Diary_Content

@@ -12,12 +12,13 @@
         android:layout_width="340dp"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:padding="15dp"
         android:layout_height="600dp">
 
         <ImageView
             android:id="@+id/diaryDlgImg"
-            android:layout_width="293dp"
-            android:layout_height="243dp"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
             android:layout_marginTop="20dp"
             tools:srcCompat="@drawable/ic_baseline_whatshot_24" />
 
@@ -28,9 +29,10 @@
                 android:layout_height="wrap_content"
                 android:text="이 날의 운동 일기"
                 android:textColor="@color/own_text_dark"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:layout_marginTop="10dp"
                 android:padding="5dp"
+                android:layout_marginLeft="10dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -39,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:lineHeight="24dp"
+                android:layout_marginLeft="10dp"
                 android:text="Lorem ipsum dolor sit amet,  aliqua. Ut enim ad minim veniam, quis nosuip ex ea commodo consequat. Duiident"
                 android:textSize="16dp" />
 
@@ -46,16 +49,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="이 날의 운동들"
+                android:layout_marginLeft="10dp"
                 android:textColor="@color/own_text_dark"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/diaryDlgRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_weight="1" />
 
 
