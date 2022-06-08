@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.own.Diary.DiaryData
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.databinding.FragmentCalenderBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -226,7 +227,12 @@ class CalendarFragment : Fragment() {
             view.selectedDate = date
 
             // 만약 기록 있다면
-            // if(has diary)
+//            if(db.getDidRecord){
+//
+//            }
+            DiaryDialog(DiaryData("2022-06-08","오늘 빡셌다아아아아아","src"))
+                .show(parentFragmentManager,"DiaryDlg")
+
 
         }
 

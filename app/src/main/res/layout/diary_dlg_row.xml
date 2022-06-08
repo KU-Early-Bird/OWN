@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="#D0F1E9E2"
+    android:layout_marginVertical="3dp"
+    >
+
+
+    <ImageView
+        android:id="@+id/diaryDlgEmoji"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/ic_baseline_mood_24" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/diaryDlgWorkoutName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:layout_marginRight="5dp"
+            android:text="운동 이름" />
+
+        <TextView
+            android:id="@+id/diaryDlgWorkoutSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="부위, 세트" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:background="#D8454444"/>
+
+        <TextView
+            android:id="@+id/diaryDlgOneLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="운동 한줄평. 오늘은 어땠음" />
+    </LinearLayout>
+</LinearLayout>
