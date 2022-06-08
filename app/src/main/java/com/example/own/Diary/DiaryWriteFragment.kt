@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.setFragmentResultListener
 import com.example.own.MainActivity
 import com.example.own.R
 import com.example.own.databinding.FragmentDiaryWriteBinding
@@ -20,13 +21,18 @@ import java.util.*
 
 class DiaryWriteFragment: Fragment() {
     lateinit var binding: FragmentDiaryWriteBinding
-    lateinit var newdiarydataimage: String
-    lateinit var newdiarydatadate: String
+    lateinit var newdiarydataimage : String
+    var newdiarydatadate = "yyyy-mm-dd"
     lateinit var newdiarydatacontent: String
     var table_name = "Diary"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //dataget
+        setFragmentResultListener("DiaryWrite") { key, bundle ->
+            newdiarydatadate = bundle.getString("date").toString()
+        }
     }
 
     override fun onCreateView(
@@ -40,30 +46,42 @@ class DiaryWriteFragment: Fragment() {
         val startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK) {
-                    var imageURI = it.data?.data!!
+                    val imageURI = it.data?.data!!
                     //image show on write fragment
                     binding.imageinput.setImageURI(imageURI)
 
                     //image copy outputstream
-                    var storage = context?.filesDir
+                    val storage = context?.filesDir
                     //image saving filename format
                     //variable filenum will be changed to the date
                     val calendar = Calendar.getInstance()
-                    val year = calendar.get(Calendar.YEAR).toString()
-                    val month = (calendar.get(Calendar.MONTH) + 1).toString() //달은 0부터 시작함
-                    val day = calendar.get(Calendar.DATE).toString()
-                    newdiarydatadate = "$year-$month-$day"
-                    var filename = newdiarydatadate + ".jpg"
-                    var tempFile = File(storage, filename)
+                    val filename = newdiarydatadate + ".jpg"
+                    val tempFile = File(storage, filename)
                     Log.e("image", context?.filesDir.toString() + "/" + filename + ".jpg")
                     tempFile.createNewFile()
-                    var out = FileOutputStream(tempFile)
+                    val out = FileOutputStream(tempFile)
 
                     //open image with uri for saving
                     val stream = requireActivity().contentResolver.openInputStream(imageURI);
                     var bitmap = BitmapFactory.decodeStream(stream)
-                    //image resize
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 640, 640, true)
+
+
+                    //image resize//////
+                    var cropsize = bitmap.width
+                    var x = 0
+                    var y = 0
+                    if(bitmap.width > bitmap.height) {
+                        cropsize = bitmap.height
+                        y = 0
+                        x = (bitmap.width-bitmap.height)/2
+                    }
+                    else {
+                        cropsize = bitmap.width
+                        y = (bitmap.height-bitmap.width)/2
+                        x = 0
+                    }
+                    bitmap = Bitmap.createBitmap(bitmap, x, y, cropsize, cropsize)
+
                     //image press to output
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
                     out.close()
@@ -72,7 +90,7 @@ class DiaryWriteFragment: Fragment() {
 
         //image select ↑↑↑↑↑↑↑↑↑↑
         binding.imageinput.setOnClickListener {
-            var intent = Intent(Intent.ACTION_PICK)
+            val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startForResult.launch(intent)
         }
@@ -88,7 +106,7 @@ class DiaryWriteFragment: Fragment() {
             //경로에 따라 수정 필요
 
 
-            var newdiarydata = DiaryData(newdiarydatadate, newdiarydatacontent, newdiarydataimage)
+            val newdiarydata = DiaryData(newdiarydatadate, newdiarydatacontent, newdiarydataimage)
             var result = (activity as MainActivity).dbhelper.insertDiaryData(newdiarydata)
         }
 
