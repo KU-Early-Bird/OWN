@@ -27,6 +27,14 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val DIARYDATE = "DIARY_DATE"
         val DIARYCONTENT = "DIARY_CONTENT"
         val DIARYIMAGE = "DIARY_IMAGE"
+
+        //workout table
+        val WORKOUT_TABLE_NAME = "WORKOUT"
+        val WORKOUT_DATE = "DATE"
+        val WORKOUT_ASSESSMENT = "ASSESSMENT"
+        val WORKOUT_EMOJI_ID = "EMOJI_ID"
+        val WORKOUT_DURATION = "DURATION"
+        val WORKOUT_NAME ="NAME"
     }
 
     val dateFormat = SimpleDateFormat("yyyy-M-d")
@@ -56,6 +64,15 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$DIARYIMAGE text);"
         db!!.execSQL(create_diary_table)
         Log.e("db" , "table had been made")
+
+        var create_workout_table ="create table if not exists $WORKOUT_TABLE_NAME(" +
+                "$WORKOUT_DATE date, $WORKOUT_NAME text primary key default (date('now')), " +
+                "$WORKOUT_ASSESSMENT text," +
+                "$WORKOUT_DURATION text," +
+                "$WORKOUT_EMOJI_ID integer );"
+
+        db!!.execSQL(create_workout_table)
+        println("workout table had been made")
     }
 
 
