@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import android.database.sqlite.SQLiteDatabase
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
+import com.example.own.Routine.RoutineFragment
 import com.example.own.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.tab_home-> supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
                 R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment()).commit()
-                R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
+                R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,RoutineFragment()).commit()
 //                R.id.tab_workout->
 
             }
