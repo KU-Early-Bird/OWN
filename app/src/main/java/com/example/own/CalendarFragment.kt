@@ -2,6 +2,7 @@ package com.example.own
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -10,6 +11,7 @@ import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.own.Diary.DiaryData
@@ -69,6 +71,7 @@ class CalendarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         today = getTodayGregorian()
         clickedDate = getTodayGregorian()
+
         initDB()
         initLayer()
     }
@@ -169,14 +172,13 @@ class CalendarFragment : Fragment() {
 
 
         // calender click 이벤트
-//        binding!!.calendarView.isLongClickable = true;
         binding!!.calendarView.setOnDateChangedListener { _, date, selected ->
             if(today == null)
                 today = getTodayGregorian()
-            
 
             clickedDate = GregorianCalendar(date.year,date.month-1,date.day)
             diaryData = ownDBHelper.getDiaryData(clickedDate!!); // 기록 데이터 존재여부 확인
+
 
             // 과거
             if(clickedDate!!.compareTo(today)<0){
@@ -261,8 +263,16 @@ class CalendarFragment : Fragment() {
         ownList.add(OwnListData(GregorianCalendar(2022,6,7),true, "윗몸일으키기","코어", 3,3))
         ownList.add(OwnListData(GregorianCalendar(2022,6,7),true, "달리기","다리", 1,2))
 
-        // 오늘 운동 가져오기
+        // 리사이클러 뷰 어댑터
         ownListAdapter = OwnListAdapter(ownList,today)
+        ownListAdapter.onItemClickListener= object : OwnListAdapter.OnItemClickListener{
+            override fun onClick(p0: View?) {
+                val fragTransaction = requireActivity().supportFragmentManager.beginTransaction()
+//                fragTransaction.replace(R.id.container,) // workout fragment으로 전환
+                fragTransaction.commit()
+            }
+
+        }
         binding!!.apply {
             ownListRecyclerView.layoutManager =
                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
