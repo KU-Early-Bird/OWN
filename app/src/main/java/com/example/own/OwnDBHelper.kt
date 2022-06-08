@@ -36,6 +36,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val WORKOUT_EMOJI_ID = "EMOJI_ID"
         val WORKOUT_DURATION = "DURATION"
         val WORKOUT_NAME ="NAME"
+        val WORKOUT_BODY_PART = "BODY_PART"
         val WORKOUT_IS_DONE = "IS_DONE"
         val WORKOUT_SET = "WORKOUT_SET"
     }
@@ -70,7 +71,10 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         Log.e("db" , "table had been made")
 
         var create_workout_table ="create table if not exists $WORKOUT_TABLE_NAME(" +
-                "$WORKOUT_DATE date, $WORKOUT_NAME text primary key default (date('now')), " +
+                "WID integer primary key autoincrement,"+
+                "$WORKOUT_DATE date primary key default (date('now')), " +
+                "$WORKOUT_NAME text,"+
+                "$WORKOUT_BODY_PART text,"+
                 "$WORKOUT_ASSESSMENT text," +
                 "$WORKOUT_SET integer," +
                 "$WORKOUT_DURATION text,"+
@@ -259,6 +263,120 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
 
         return diary_item
+    }
+
+
+//    /*Workout data*/
+//    // 날짜 넣으면 그날 데이터 반환하기 ownList형태로
+//    public fun getWorkoutOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
+//        val ownList = ArrayList<OwnListData>()
+//        val dateStr = dateFormat.format(day.time)
+//        var strSql = "select * from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = '$dateStr';"
+//        val db = readableDatabase
+//        val cursor = db.rawQuery(strSql, null)
+//
+//        cursor.moveToFirst()
+//        if(cursor.count>0){
+//            do {
+//
+////              //    "$WORKOUT_DATE date, $WORKOUT_NAME text primary key default (date('now')), " +
+//                ////    "$WORKOUT_ASSESSMENT text," +
+//                ////    "$WORKOUT_SET integer," +
+//                ////    "$WORKOUT_DURATION text,"+
+//                ////    "$WORKOUT_EMOJI_ID integer,"+
+//                ////    "$WORKOUT_IS_DONE integer);"
+////                 val name=cursor.getString(1)
+//////                 val bodyPart=cursor.getString(3)
+////                 val set=cursor.getString(4).toInt()
+////                 val emoji=cursor.getString(4).toInt()
+////                val isDone= cursor.getString(1).toInt()==1
+
+////                var ownListData =
+////                    OwnListData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
+////                ownList.add(ownListData)
+//            }while(cursor.moveToNext())
+//        }
+//
+//        cursor.close()
+//        db.close()
+//
+//        return ownList
+//    }
+
+    public fun getRoutineOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
+        val ownList = ArrayList<OwnListData>()
+
+        val dateStr = dateFormat.format(day.time)
+//        var strSql = "select * from $ROUTINE_TABLE_NAME;"
+//        val db = readableDatabase
+//        val cursor = db.rawQuery(strSql, null)
+//
+//        cursor.moveToFirst()
+//        if(cursor.count>0){
+//            do {
+//
+////
+////                 val name=cursor.getString(1)
+//////                 val bodyPart=cursor.getString(3)
+////                 val set=cursor.getString(4).toInt()
+//                    val dayOfWeek = getString(4).toInt()
+//                    val isDay =cursor.getString(4).toInt() == 1
+
+        // 루틴에서 받아온 week 값 -> 비트맵 변환
+        // 입력 날짜에서 받아온 week 값 -> 비트맵 변환
+        // 두 비트맵 AND 연산
+        // 연산한게 1이면 그 날 루틴인 것 -> ownList에 추가
+
+
+////                var ownListData =
+////                    OwnListData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
+////                ownList.add(ownListData)
+//            }while(cursor.moveToNext())
+//        }
+//
+//        cursor.close()
+//        db.close()
+//
+        return ownList
+      }
+
+    //val create_routine_table = "create table if not exists $ROUTINE_TABLE_NAME("+
+    //                "$ID integer primary key autoincrement, "+
+    //                "$NAME varchar, "+
+    //                "$BODYPART varchar, "+
+    //                "$SETNUM int, "+
+    //                "$TIME int, "+
+    //                "$RESTTIME int, "+
+    //                "$PARTTIME int, "+
+    //                "$TYPE tinyint, "+
+    //                "$SOUND tinyint, "+
+    //                "$ISDAY tinyint, "+
+    //                "$DAYOFWEEK tinyint, "+
+    //                "$ENABLED tinyint);"
+    //        db!!.execSQL(create_routine_table)
+
+    fun convertDayOfWeekToBitSet(date:GregorianCalendar):BitSet{
+        val calendar = Calendar.getInstance()
+        calendar.time = date.time // 일:1 ~ 토:7
+        var bitset = BitSet(7)
+        bitset[calendar.get(Calendar.DAY_OF_WEEK)-1] = true
+        return bitset
+    }
+
+    fun convertWeekRoutineToBitset(weekRoutine:Int):BitSet{
+        var bitset = BitSet(7)// 일월화수목금토 순?
+        var wr = weekRoutine
+        var i=0
+        var str=""
+        bitset[0]= true
+        bitset[i]
+        while (wr>1){
+            bitset[i] = (wr%2 == 1)
+            i++
+            wr/=2
+        }
+        bitset[i] = wr==1
+        return bitset
     }
 
 
