@@ -36,6 +36,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val WORKOUT_DURATION = "DURATION"
         val WORKOUT_NAME ="NAME"
         val WORKOUT_IS_DONE = "IS_DONE"
+        val WORKOUT_SET = "WORKOUT_SET"
     }
 
     val dateFormat = SimpleDateFormat("yyyy-M-d")
@@ -69,7 +70,8 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         var create_workout_table ="create table if not exists $WORKOUT_TABLE_NAME(" +
                 "$WORKOUT_DATE date, $WORKOUT_NAME text primary key default (date('now')), " +
                 "$WORKOUT_ASSESSMENT text," +
-                "$WORKOUT_DURATION text," +
+                "$WORKOUT_SET integer," +
+                "$WORKOUT_DURATION text,"+
                 "$WORKOUT_EMOJI_ID integer,"+
                 "$WORKOUT_IS_DONE integer);"
 
