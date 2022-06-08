@@ -3,6 +3,7 @@ package com.example.own
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.GridView
@@ -10,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.own.Diary.DiaryData
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.databinding.FragmentCalenderBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -31,7 +33,7 @@ class CalendarFragment : Fragment() {
     // ownList members
     lateinit var ownListAdapter: OwnListAdapter
     val ownList=ArrayList<OwnListData>()
-    var didRecord = false
+    var didRecord = true
 
     // achieve members
     var binding:FragmentCalenderBinding ?=null
@@ -95,6 +97,7 @@ class CalendarFragment : Fragment() {
 
         // 오늘 기록 했는지 저장
 //        didRecord =ownDBHelper.getDidWriteDiary(CalendarDay.today())
+//        Log.d("didRecord",didRecord.toString())
 
     }
 
@@ -226,7 +229,12 @@ class CalendarFragment : Fragment() {
             view.selectedDate = date
 
             // 만약 기록 있다면
-            // if(has diary)
+//            if(db.getDidRecord){
+//
+//            }
+            DiaryDialog(DiaryData("2022-06-08","오늘 빡셌다아아아아아","src"))
+                .show(parentFragmentManager,"DiaryDlg")
+
 
         }
 
