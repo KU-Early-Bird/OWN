@@ -15,7 +15,7 @@ class OwnListAdapter(val items:ArrayList<OwnListData>, val today: GregorianCalen
          override fun onClick(p0: View?)
      }
 
-    val onItemClickListener:OnItemClickListener ?= null
+    var onItemClickListener:OnItemClickListener ?= null
 
     inner class ViewHolder(val binding: DailyWorkoutRowBinding) : RecyclerView.ViewHolder(binding.root) {
     }
