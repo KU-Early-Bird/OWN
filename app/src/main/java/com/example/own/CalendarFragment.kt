@@ -3,6 +3,7 @@ package com.example.own
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.GridView
@@ -32,7 +33,7 @@ class CalendarFragment : Fragment() {
     // ownList members
     lateinit var ownListAdapter: OwnListAdapter
     val ownList=ArrayList<OwnListData>()
-    var didRecord = false
+    var didRecord = true
 
     // achieve members
     var binding:FragmentCalenderBinding ?=null
@@ -96,6 +97,7 @@ class CalendarFragment : Fragment() {
 
         // 오늘 기록 했는지 저장
 //        didRecord =ownDBHelper.getDidWriteDiary(CalendarDay.today())
+//        Log.d("didRecord",didRecord.toString())
 
     }
 

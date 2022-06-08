@@ -195,11 +195,11 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 이날 기록했는지 여부 판단
     fun getDidWriteDiary(day: CalendarDay):Boolean{
-        val dateStr = tempDateFormat.format(GregorianCalendar(day.year,day.month-1,day.day).time)
+        val dateStr = dateFormat.format(GregorianCalendar(day.year,day.month-1,day.day).time)
         var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
         val db = readableDatabase
 
-        val cursor  = db.rawQuery(dateStr,null)
+        val cursor  = db.rawQuery(strSql,null)
 //        cursor.moveToFirst()
 
         // 기록이 있을 경우 true 반환
