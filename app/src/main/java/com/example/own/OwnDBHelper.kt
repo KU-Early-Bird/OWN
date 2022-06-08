@@ -2,6 +2,7 @@ package com.example.own
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -9,8 +10,11 @@ import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.own.Diary.DiaryData
-import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.example.own.Routine.RoutineData
+import kotlin.collections.ArrayList
 
+//class OwnDBHelper(val context: FragmentActivity?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+//=======
 
 class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object{
@@ -18,7 +22,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val DB_VERSION =1
 
         // about achieve table
-        val ACHIEVE_TABLE_NAME = "achieve"
+        val TABLE_NAME = "achieve"
         val LAST_UPDATE ="lastUpdate"
         val OWNWAN_DAYS ="ownwanDays"
         val DID_COMPLETE = "didComplete"
@@ -28,20 +32,22 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val DIARYCONTENT = "DIARY_CONTENT"
         val DIARYIMAGE = "DIARY_IMAGE"
 
-        //workout table
-        val WORKOUT_TABLE_NAME = "WORKOUT"
-        val WORKOUT_DATE = "DATE"
-        val WORKOUT_ASSESSMENT = "ASSESSMENT"
-        val WORKOUT_EMOJI_ID = "EMOJI_ID"
-        val WORKOUT_DURATION = "DURATION"
-        val WORKOUT_NAME ="NAME"
-        val WORKOUT_IS_DONE = "IS_DONE"
-        val WORKOUT_SET = "WORKOUT_SET"
+        val ROUTINE_TABLE_NAME = "routine"
+        val ID = "id"
+        val NAME = "name"
+        val BODYPART = "bodypart"
+        val SETNUM = "setnum"
+        val TIME = "time"
+        val RESTTIME = "resttime"
+        val PARTTIME = "parttime"
+        val TYPE = "type"
+        val SOUND = "sound"
+        val ISDAY = "isday"
+        val DAYOFWEEK = "dayofweek"
+        val ENABLED = "enabled"
     }
 
-    val dateFormat = SimpleDateFormat("yyyy-M-d")
-    val tempDateFormat = SimpleDateFormat("yyyy.MM.dd")
-
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
     lateinit var DiaryList:ArrayList<DiaryData>
     var diaryrowcount=-1
     init {
@@ -52,12 +58,13 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     // 데이터 베이스 생성시 테이블 없다면 생성
     override fun onCreate(db: SQLiteDatabase?) {
 
-        var create_achieve_table ="create table if not exists $ACHIEVE_TABLE_NAME(" +
+        var create_table ="create table if not exists $TABLE_NAME(" +
+
                 "$LAST_UPDATE date primary key default (date('now')), " +
                 "$OWNWAN_DAYS integer," +
                 "$DID_COMPLETE tinyint );"
 
-        db!!.execSQL(create_achieve_table) // SQL에서 실행해라! - 테이블 생성
+        db!!.execSQL(create_table) // SQL에서 실행해라! - 테이블 생성
 
         var create_diary_table = "create table if not exists $DIARY_TABLE_NAME(" +
                 "DID integer primary key autoincrement, " +
@@ -65,32 +72,43 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$DIARYCONTENT text, " +
                 "$DIARYIMAGE text);"
         db!!.execSQL(create_diary_table)
+
         Log.e("db" , "table had been made")
 
-        var create_workout_table ="create table if not exists $WORKOUT_TABLE_NAME(" +
-                "$WORKOUT_DATE date, $WORKOUT_NAME text primary key default (date('now')), " +
-                "$WORKOUT_ASSESSMENT text," +
-                "$WORKOUT_SET integer," +
-                "$WORKOUT_DURATION text,"+
-                "$WORKOUT_EMOJI_ID integer,"+
-                "$WORKOUT_IS_DONE integer);"
-
-        db!!.execSQL(create_workout_table)
-        println("workout table had been made")
+        val create_routine_table = "create table if not exists $ROUTINE_TABLE_NAME("+
+                "$ID integer primary key autoincrement, "+
+                "$NAME varchar, "+
+                "$BODYPART varchar, "+
+                "$SETNUM int, "+
+                "$TIME int, "+
+                "$RESTTIME int, "+
+                "$PARTTIME int, "+
+                "$TYPE tinyint, "+
+                "$SOUND tinyint, "+
+                "$ISDAY tinyint, "+
+                "$DAYOFWEEK tinyint, "+
+                "$ENABLED tinyint);"
+        db!!.execSQL(create_routine_table)
     }
 
+//    public  fun initData(){
+//        val achieveData = readCurRecord()
+//        if(achieveData.lastUpdateDate == null){
+//            insertRecord(0,0)
+//        }
+//    }
 
     // 테이블 업그레이드 시 실행 내용
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
-        val drop_table = "drop table if exists $ACHIEVE_TABLE_NAME;"
+        val drop_table = "drop table if exists $TABLE_NAME;"
         db!!.execSQL(drop_table)
         onCreate(db)
     }
 
     // 현재 테이블 내용 가져오기 - 반환해야할 것 : 날짜 & ownwanDays (어차피 한줄)
-    public fun readAchieve():AchieveTableData{
+    public fun readCurRecord():AchieveTableData{
         // 질의문으로 데이터 베이스 모든 내용 가져오기
-        val strSql = "select * from $ACHIEVE_TABLE_NAME;"
+        val strSql = "select * from $TABLE_NAME;"
         val db = readableDatabase
         val cursor = db.rawQuery(strSql,null) // 조건이 없어서 null
 
@@ -134,7 +152,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val db = writableDatabase
 
         // 오류나면 -1 반환,
-        val flag = db.insert(ACHIEVE_TABLE_NAME, null, values)>0
+        val flag = db.insert(TABLE_NAME, null, values)>0
 
         // 삽입 명령어 실행하면 무조건 db.close해야함 (성공 실패 관계 없이)
         db.close()
@@ -142,19 +160,23 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return flag
     }
 
-    public fun deleteAchieve(){
-        val strSql = "delete from $ACHIEVE_TABLE_NAME;"
+    public fun deleteRecord(){
+        val strSql = "delete from $TABLE_NAME;"
         val db = writableDatabase
-        var flag = db.delete(ACHIEVE_TABLE_NAME,null,null)
-        if(flag==-1)
-            Toast.makeText(context,"fail",Toast.LENGTH_SHORT).show()
+//        val cursor = db.rawQuery(strSql,null)
+        var flag = db.delete(TABLE_NAME,null,null)
+//        if(flag==-1)
+//            Toast.makeText(context,"fail",Toast.LENGTH_LONG).show()
+//        else
+//            Toast.makeText(context,"success",Toast.LENGTH_LONG).show()
 
+//        cursor.close()
         db.close()
     }
 
     // 테이블 내용 업데이트 하기
-    public fun updateAchieve(ownwanDays:Int,didComplete: Boolean){
-        deleteAchieve()
+    public fun updateRecord(ownwanDays:Int,didComplete: Boolean){
+        deleteRecord()
         var didCompleteFlag = 0
         if(didComplete) didCompleteFlag=1 else didCompleteFlag=0
         insertRecord(ownwanDays,didCompleteFlag)
@@ -214,48 +236,142 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
     }
 
-    // 해당 날짜 기록데이터 반환
-    fun getDiaryData(day: CalendarDay):DiaryData?{
-        val dateStr = dateFormat.format(GregorianCalendar(day.year,day.month-1,day.day).time)
-        var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
+    ////////////// Routine
+    fun getAllRoutine(): ArrayList<RoutineData> {
+        var rtData = ArrayList<RoutineData>()
+        val strsql = "select * from $ROUTINE_TABLE_NAME;"
         val db = readableDatabase
-
-        val cursor  = db.rawQuery(strSql,null)
+        val cursor = db.rawQuery(strsql, null)
         cursor.moveToFirst()
+        val attrcount = cursor.columnCount
+        for(i in 0 until attrcount){
+            rtData[i].id = cursor.getColumnIndex("id").toInt()
+            rtData[i].name = cursor.getColumnIndex("name").toString()
+            rtData[i].bodyPart = cursor.getColumnIndex("bodypart").toString()
+            rtData[i].setNum = cursor.getColumnIndex("setnum").toInt()
+            rtData[i].time = cursor.getColumnIndex("time").toInt()
+            rtData[i].restTime = cursor.getColumnIndex("resttime").toInt()
+            rtData[i].partTime = cursor.getColumnIndex("parttime").toInt()
+            rtData[i].type =
+                if(cursor.getColumnIndex("type").toInt() == 0) false
+                else true
+            rtData[i].sound =
+                if(cursor.getColumnIndex("sound").toInt() == 0) false
+                else true
+            rtData[i].isDay =
+                if(cursor.getColumnIndex("isday").toInt() == 0) false
+                else true
+            var dayofweek = cursor.getColumnIndex("dayofweek").toInt()
+            for(j in 6 downTo 0) {
+                rtData[i].dayOfWeek[j] =
+                    if (dayofweek % 2 == 0) false
+                    else true
+                dayofweek = dayofweek / 2
+            }
+            rtData[i].enabled =
+                if(cursor.getColumnIndex("enabled").toInt() == 0) false
+                else true
+        }
 
-        var hasData = cursor.count != 0
-        // 0 > DID / 1 > DATE / 2 > CONTENT / 3 > IMAGE(path)
-        var diary_item:DiaryData ?= null
-        if(hasData)
-            diary_item =
-                DiaryData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
-
-        // 기록이 있을 경우 true 반환
         cursor.close()
         db.close()
-
-        return diary_item
+        return rtData
     }
 
-    fun getDiaryData(day: GregorianCalendar):DiaryData?{
-        val dateStr = dateFormat.format(day.time)
-        var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
+    fun findRoutine(id:Int):RoutineData {
+        var rtData = RoutineData()
+        rtData.id = id
+        val strsql = "select * from $ROUTINE_TABLE_NAME where $ID='$id';"
         val db = readableDatabase
-
-        val cursor  = db.rawQuery(strSql,null)
+        val cursor = db.rawQuery(strsql, null)
         cursor.moveToFirst()
-
-        var hasData = cursor.count != 0
-        // 0 > DID / 1 > DATE / 2 > CONTENT / 3 > IMAGE(path)
-        var diary_item:DiaryData ?= null
-        if(hasData)
-            diary_item =
-                DiaryData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
-
-        // 기록이 있을 경우 true 반환
+        rtData.name = cursor.getColumnIndex("name").toString()
+        rtData.bodyPart = cursor.getColumnIndex("bodypart").toString()
+        rtData.setNum = cursor.getColumnIndex("setnum").toInt()
+        rtData.time = cursor.getColumnIndex("time").toInt()
+        rtData.restTime = cursor.getColumnIndex("resttime").toInt()
+        rtData.partTime = cursor.getColumnIndex("parttime").toInt()
+        rtData.type =
+            if(cursor.getColumnIndex("type").toInt() == 0) false
+            else true
+        rtData.sound =
+            if(cursor.getColumnIndex("sound"). toInt() == 0) false
+            else true
+        rtData.isDay =
+            if(cursor.getColumnIndex("isday").toInt() == 0) false
+            else true
+        var dayofweek = cursor.getColumnIndex("dayofweek").toInt()
+        for(j in 6 downTo 0) {
+            rtData.dayOfWeek[j] =
+                if (dayofweek % 2 == 0) false
+                else true
+            dayofweek = dayofweek / 2
+        }
+        rtData.enabled =
+            if(cursor.getColumnIndex("enabled").toInt() == 0) false
+            else true
         cursor.close()
         db.close()
+        return rtData
+    }
 
-        return diary_item
+    fun insertRoutine(rtData:RoutineData):Boolean{
+        val values = ContentValues()
+        values.put(ID, rtData.id)
+        values.put(NAME,rtData.name)
+        values.put(BODYPART,rtData.bodyPart)
+        values.put(SETNUM,rtData.setNum)
+        values.put(TIME,rtData.time)
+        values.put(RESTTIME,rtData.restTime)
+        values.put(PARTTIME,rtData.partTime)
+        values.put(TYPE, if(rtData.type) 1 else 0)
+        values.put(SOUND, if(rtData.sound) 1 else 0)
+        values.put(ISDAY, if(rtData.isDay) 1 else 0)
+        var dayofweek = 0
+        for(j in 6 downTo 0){
+            dayofweek *= 2
+            if(rtData.dayOfWeek[j])
+                dayofweek += 1
+        }
+        values.put(DAYOFWEEK, dayofweek)
+        values.put(ENABLED, if(rtData.enabled) 1 else 0)
+        val db = writableDatabase
+        val flag = db.insert(ROUTINE_TABLE_NAME, null, values)>0
+        db.close()
+        return flag
+    }
+
+    fun updateRoutine(rtData:RoutineData): Boolean {
+        val id = rtData.id
+        val strsql = "select * from $TABLE_NAME where $ID='$id';"
+        val db = writableDatabase
+        val cursor = db.rawQuery(strsql, null)
+        val flag = cursor.count!=0
+        if(flag){
+            cursor.moveToFirst()
+            val values = ContentValues()
+            values.put(ID, rtData.id)
+            values.put(NAME,rtData.name)
+            values.put(BODYPART,rtData.bodyPart)
+            values.put(SETNUM,rtData.setNum)
+            values.put(TIME,rtData.time)
+            values.put(RESTTIME,rtData.restTime)
+            values.put(PARTTIME,rtData.partTime)
+            values.put(TYPE, if(rtData.type) 1 else 0)
+            values.put(SOUND, if(rtData.sound) 1 else 0)
+            values.put(ISDAY, if(rtData.isDay) 1 else 0)
+            var dayofweek = 0
+            for(j in 6 downTo 0){
+                if(rtData.dayOfWeek[j])
+                    dayofweek += 1
+                dayofweek *= 2
+            }
+            values.put(DAYOFWEEK, dayofweek)
+            values.put(ENABLED, if(rtData.enabled) 1 else 0)
+            db.update(ROUTINE_TABLE_NAME, values, "$ID=?", arrayOf(id.toString()))
+        }
+        cursor.close()
+        db.close()
+        return flag
     }
 }
