@@ -33,7 +33,7 @@ class CalendarFragment : Fragment() {
     // ownList members
     lateinit var ownListAdapter: OwnListAdapter
     val ownList=ArrayList<OwnListData>()
-    var didRecord = true
+    var diaryData:DiaryData?=null
 
     // achieve members
     var binding:FragmentCalenderBinding ?=null
@@ -96,7 +96,7 @@ class CalendarFragment : Fragment() {
         // 과거 할일 : 운동 완료 누르면 그날 루틴 데이터 최종 저장
 
         // 오늘 기록 했는지 저장
-//        didRecord =ownDBHelper.getDidWriteDiary(CalendarDay.today())
+        diaryData =ownDBHelper.getDiaryData(CalendarDay.today())
 //        Log.d("didRecord",didRecord.toString())
 
     }
@@ -124,10 +124,10 @@ class CalendarFragment : Fragment() {
             if(!achieveTableData.didWorkout){
                 writeDiary.visibility = View.VISIBLE
                 completeWorkout.visibility= View.GONE
-            }else if(achieveTableData.didWorkout && !didRecord){
+            }else if(achieveTableData.didWorkout && diaryData!=null){
                 writeDiary.visibility = View.GONE
                 completeWorkout.visibility= View.VISIBLE
-            }else if(achieveTableData.didWorkout && didRecord) {
+            }else if(achieveTableData.didWorkout && diaryData!=null) {
                 writeDiary.visibility = View.GONE
                 completeWorkout.visibility = View.GONE
             }
@@ -162,8 +162,10 @@ class CalendarFragment : Fragment() {
         binding!!.calendarView.setOnDateChangedListener { _, date, selected ->
             if(today == null)
                 today = getTodayGregorian()
+            
 
             val clickedDate = GregorianCalendar(date.year,date.month-1,date.day)
+            diaryData = ownDBHelper.getDiaryData(clickedDate); // 기록 데이터 존재여부 확인
 
             // 과거
             if(clickedDate.compareTo(today)<0){
@@ -173,10 +175,9 @@ class CalendarFragment : Fragment() {
                 // 운동 데이터 - 날짜에 해당하는 데이터 불러오기
                 // ownList = 날짜 데이터 반환 값(리스트)
                 // ownListAdapter.notifyDataSetChanged()
+                
 
-                // 기록 데이터 - boolean 값 반환하도록
-                val didRecorded = false; // 여기다 대입
-                if(didRecorded){
+                if(diaryData!=null){
                     binding!!.writeDiary.visibility = View.GONE
                 }else{
                     binding!!.writeDiary.visibility = View.VISIBLE
@@ -203,15 +204,15 @@ class CalendarFragment : Fragment() {
             else{
                 // 운동 완료 여부와 기록 여부에 따라  - 운동 DB & 기록 DB 에서 받아오기(?)
                 val didComplete = false;
-                val didRecorded = false;
+
                 binding!!.apply {
                     if(!didComplete){
                         completeWorkout.visibility = View.VISIBLE
                         writeDiary.visibility = View.GONE
-                    }else if(didComplete && !didRecorded){
+                    }else if(didComplete && diaryData==null){
                         completeWorkout.visibility = View.GONE
                         writeDiary.visibility = View.VISIBLE
-                    }else if (didComplete && didRecorded){
+                    }else if (didComplete && diaryData!=null){
                         completeWorkout.visibility = View.GONE
                         writeDiary.visibility = View.GONE
                     }
@@ -227,13 +228,14 @@ class CalendarFragment : Fragment() {
         binding!!.calendarView.setOnDateLongClickListener { view, date ->
             // 꾹 누른 날 선택되도록
             view.selectedDate = date
+            diaryData = ownDBHelper.getDiaryData(date); // 기록 데이터 존재여부 확인
 
             // 만약 기록 있다면
-//            if(db.getDidRecord){
-//
-//            }
-            DiaryDialog(DiaryData("2022-06-08","오늘 빡셌다아아아아아","src"))
-                .show(parentFragmentManager,"DiaryDlg")
+            if(diaryData!=null){
+                DiaryDialog(diaryData!!)
+                    .show(parentFragmentManager,"DiaryDlg")
+
+            }
 
 
         }

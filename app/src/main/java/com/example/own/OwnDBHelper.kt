@@ -193,23 +193,48 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
     }
 
-    // 이날 기록했는지 여부 판단
-    fun getDidWriteDiary(day: CalendarDay):Boolean{
+    // 해당 날짜 기록데이터 반환
+    fun getDiaryData(day: CalendarDay):DiaryData?{
         val dateStr = dateFormat.format(GregorianCalendar(day.year,day.month-1,day.day).time)
         var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
         val db = readableDatabase
 
         val cursor  = db.rawQuery(strSql,null)
-//        cursor.moveToFirst()
+        cursor.moveToFirst()
+
+        var hasData = cursor.count != 0
+        // 0 > DID / 1 > DATE / 2 > CONTENT / 3 > IMAGE(path)
+        var diary_item:DiaryData ?= null
+        if(hasData)
+            diary_item =
+                DiaryData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
 
         // 기록이 있을 경우 true 반환
-//        var flag = false;
-        var flag = cursor.count != 0
-
         cursor.close()
         db.close()
 
-        return flag
+        return diary_item
+    }
 
+    fun getDiaryData(day: GregorianCalendar):DiaryData?{
+        val dateStr = dateFormat.format(day.time)
+        var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
+        val db = readableDatabase
+
+        val cursor  = db.rawQuery(strSql,null)
+        cursor.moveToFirst()
+
+        var hasData = cursor.count != 0
+        // 0 > DID / 1 > DATE / 2 > CONTENT / 3 > IMAGE(path)
+        var diary_item:DiaryData ?= null
+        if(hasData)
+            diary_item =
+                DiaryData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
+
+        // 기록이 있을 경우 true 반환
+        cursor.close()
+        db.close()
+
+        return diary_item
     }
 }
