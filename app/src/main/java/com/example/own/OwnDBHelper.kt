@@ -9,6 +9,7 @@ import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.own.Diary.DiaryData
+import com.prolificinteractive.materialcalendarview.CalendarDay
 
 
 class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -29,6 +30,8 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    val tempDateFormat = SimpleDateFormat("yyyy.MM.dd")
+
     lateinit var DiaryList:ArrayList<DiaryData>
     var diaryrowcount=-1
     init {
@@ -188,5 +191,25 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         else
             Toast.makeText(context,"Success", Toast.LENGTH_LONG).show()
         db.close()
+    }
+
+    // 이날 기록했는지 여부 판단
+    fun getDidWriteDiary(day: CalendarDay):Boolean{
+        val dateStr = tempDateFormat.format(GregorianCalendar(day.year,day.month-1,day.day).time)
+        var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
+        val db = readableDatabase
+
+        val cursor  = db.rawQuery(dateStr,null)
+//        cursor.moveToFirst()
+
+        // 기록이 있을 경우 true 반환
+//        var flag = false;
+        var flag = cursor.count != 0
+
+        cursor.close()
+        db.close()
+
+        return flag
+
     }
 }

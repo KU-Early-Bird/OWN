@@ -94,7 +94,7 @@ class CalendarFragment : Fragment() {
         // 과거 할일 : 운동 완료 누르면 그날 루틴 데이터 최종 저장
 
         // 오늘 기록 했는지 저장
-        //didRecord =
+//        didRecord =ownDBHelper.getDidWriteDiary(CalendarDay.today())
 
     }
 
