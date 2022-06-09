@@ -1,15 +1,18 @@
 package com.example.own.Routine
 
+import android.content.Intent
+import android.database.Cursor
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.own.MainActivity
-import com.example.own.DB.OwnDBHelper
+import com.example.own.OwnDBHelper
 import com.example.own.R
 import com.example.own.databinding.FragmentRoutineBinding
 
@@ -33,7 +36,7 @@ class RoutineFragment : Fragment(){
         initDB()
         initRecyclerView()
         binding.addroutine.setOnClickListener{
-            childFragmentManager.beginTransaction().replace(R.id.container,RoutineWriteFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.container,RoutineWriteFragment()).commit()
         }
         return binding.root
     }
@@ -48,10 +51,19 @@ class RoutineFragment : Fragment(){
         rtRecyclerView.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.VERTICAL, false)
         rtAdapter = RoutineAdapter(rtData)
-        rtAdapter.itemClickListener = object : RoutineAdapter.OnItemClickListener{
-            override fun OnItemClick(data:RoutineData){
+        rtAdapter.textClickListener = object : RoutineAdapter.OnItemClickListener{
+            override fun OnTextClick(data:RoutineData){
                 var rtdata = Bundle()
                 rtdata.putInt("id",data.id)
+                rtdata.putInt("clicked",0)
+                setFragmentResult("rtdata", rtdata)
+                parentFragmentManager.beginTransaction().replace(R.id.container,RoutineWriteFragment()).commit()
+            }
+
+            override fun OnBtnClick(data: RoutineData) {
+                var rtdata = Bundle()
+                rtdata.putInt("id",data.id)
+                rtdata.putInt("clicked",1)
                 setFragmentResult("rtdata", rtdata)
                 parentFragmentManager.beginTransaction().replace(R.id.container,RoutineWriteFragment()).commit()
             }
