@@ -1,5 +1,6 @@
 package com.example.own.Routine
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
@@ -8,13 +9,15 @@ import com.example.own.databinding.RoutineRowBinding
 
 class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<RoutineAdapter.ViewHolder>() {
 
-    interface OnItemClickListener{
+    interface OnTextClickListener{
         fun OnTextClick(data:RoutineData)
+    }
+    interface OnBtnClickListener{
         fun OnBtnClick(data:RoutineData)
     }
 
-    var textClickListener:OnItemClickListener?=null
-    var btnClickListener:OnItemClickListener?=null
+    var textClickListener:OnTextClickListener?=null
+    var btnClickListener:OnBtnClickListener?=null
 
     inner class ViewHolder(val binding: RoutineRowBinding) : RecyclerView.ViewHolder(binding.root){
         val text = binding.background
@@ -24,6 +27,7 @@ class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<Ro
                 textClickListener?.OnTextClick(items[adapterPosition])
             }
             enabled.setOnClickListener {
+                enabled.setText(if(!items[adapterPosition].enabled) "ON" else "OFF")
                 btnClickListener?.OnBtnClick(items[adapterPosition])
             }
         }
@@ -60,6 +64,7 @@ class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<Ro
             holder.binding.date.text = str
         }
         holder.binding.sets.text = items[position].setNum.toString() + "회"
+        holder.binding.enabled.setText(if(items[position].enabled) "ON" else "OFF")
     }
 
     override fun getItemCount(): Int {
