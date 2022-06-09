@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.example.own.Diary.DiaryData
 import com.example.own.Routine.RoutineData
+import com.example.own.Workout.WorkoutData
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlin.collections.ArrayList
 
@@ -38,6 +39,8 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val WORKOUT_EMOJI_ID = "EMOJI_ID"
         val WORKOUT_DURATION = "DURATION"
         val WORKOUT_NAME ="NAME"
+        val WORKOUT_RESTTIME = "resttime"
+        val WORKOUT_PARTTIME = "parttime"
         val WORKOUT_BODY_PART = "BODY_PART"
         val WORKOUT_IS_DONE = "IS_DONE"
         val WORKOUT_SET = "WORKOUT_SET"
@@ -58,9 +61,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val ENABLED = "enabled"
     }
 
-    val dateFormat = SimpleDateFormat("yyyy-M-d")
-    val workoutDateFormat = SimpleDateFormat("yyyy-MM-dd")
-    val tempDateFormat = SimpleDateFormat("yyyy.MM.dd")
+//    val dateFormat = SimpleDateFormat("yyyy-M-d")
 
     lateinit var DiaryList:ArrayList<DiaryData>
     var diaryrowcount=-1
@@ -94,6 +95,8 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$WORKOUT_BODY_PART text,"+
                 "$WORKOUT_ASSESSMENT text," +
                 "$WORKOUT_SET integer," +
+                "$WORKOUT_RESTTIME int, "+
+                "$WORKOUT_PARTTIME int, "+
                 "$WORKOUT_DURATION text,"+
                 "$WORKOUT_EMOJI_ID integer,"+
                 "$WORKOUT_IS_DONE integer);"
@@ -248,7 +251,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     // 해당 날짜 기록데이터 반환
     fun getDiaryData(day: CalendarDay):DiaryData?{
-        val dateStr = dateFormat.format(GregorianCalendar(day.year,day.month-1,day.day).time)
+        val dateStr = converter.convertCalenderToStr(GregorianCalendar(day.year,day.month-1,day.day))
         var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
         val db = readableDatabase
 
@@ -270,7 +273,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     fun getDiaryData(day: GregorianCalendar):DiaryData?{
-        val dateStr = dateFormat.format(day.time)
+        val dateStr = converter.convertCalenderToStr(day)
         var strSql = "select * from $DIARY_TABLE_NAME where $DIARYDATE = '$dateStr';"
         val db = readableDatabase
 
@@ -296,7 +299,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     // 날짜 넣으면 그날 데이터 반환하기 ownList형태로
     public fun getWorkoutOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
         val ownList = ArrayList<OwnListData>()
-        val dateStr = dateFormat.format(day.time)
+        val dateStr = converter.convertCalenderToStr(day)
         val strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, " +
                 "${WORKOUT_SET}, ${WORKOUT_EMOJI_ID} " +
                 "from $WORKOUT_TABLE_NAME " +
@@ -326,57 +329,56 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return ownList
     }
 
-    public fun getRoutineOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
-        val ownList = ArrayList<OwnListData>()
-        val dateStr = dateFormat.format(day.time)
-//        var strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, " +
-//                "${WORKOUT_SET} from $ROUTINE_TABLE_NAME;"
-//        val db = readableDatabase
-//        val cursor = db.rawQuery(strSql, null)
-//
-//        cursor.moveToFirst()
-//        if(cursor.count>0){
-//            do {
-//
-////
-////                 val name=cursor.getString(1)
-//////                 val bodyPart=cursor.getString(3)
-////                 val set=cursor.getString(4).toInt()
-//                    val dayOfWeek = getString(4).toInt()
-//                    val isDay =cursor.getString(4).toInt() == 1
+    public fun getRoutineWorkoutList(day: GregorianCalendar):ArrayList<WorkoutData>{
+        val workoutList = ArrayList<WorkoutData>()
+        var strSql = "select *  from $ROUTINE_TABLE_NAME"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strSql, null)
 
-        // 루틴에서 받아온 week 값 -> 비트맵 변환
-        // 입력 날짜에서 받아온 week 값 -> 비트맵 변환
-        // 두 비트맵 AND 연산
-        // 연산한게 1이면 그 날 루틴인 것 -> ownList에 추가
+        cursor.moveToFirst()
+        if(cursor.count>0){
+            do {
+                val enabled=cursor.getString(0).toInt()==1
+                if(!enabled) continue
+
+                val isDay = cursor.getString(1).toInt()==1
+                if(!isDay)continue
+
+                val weekRoutine = converter.convertWeekRoutineToBitset(cursor.getString(1).toInt())
+                weekRoutine.and(converter.convertDayOfWeekToBitSet(day))
+                var flag = false
+                for(i in 0 until 7){
+                    if(weekRoutine[i]){
+                        flag=true
+                        break
+                    }
+                }
+
+                if(!flag) continue
 
 
-////                var ownListData =
-////                    OwnListData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
-////                ownList.add(ownListData)
-//            }while(cursor.moveToNext())
-//        }
-//
-//        cursor.close()
-//        db.close()
-//
-        return ownList
+                val id = cursor.getString(cursor.getColumnIndex(ID).toInt()).toInt()
+                val name = cursor.getString(cursor.getColumnIndex(NAME).toInt())
+                val bodyPart = cursor.getString(cursor.getColumnIndex(BODYPART).toInt())
+                val set = cursor.getString(cursor.getColumnIndex(SETNUM).toInt()).toInt()
+                val count = cursor.getString(cursor.getColumnIndex(TIME).toInt()).toInt()
+                val restTime = cursor.getString(cursor.getColumnIndex(RESTTIME).toInt()).toInt()
+                val partTime = cursor.getString(cursor.getColumnIndex(PARTTIME).toInt()).toInt()
+                val type = cursor.getString(cursor.getColumnIndex(TYPE).toInt()).toInt()
+                val isSoundOn=cursor.getString(cursor.getColumnIndex(SOUND).toInt()).toInt()==1
+                val dateStr= converter.convertCalenderToStr(day)
+
+                var workoutData=WorkoutData(id =id,date = dateStr,workoutName = name,
+                    bodyPart=bodyPart, assessment = "",count=count,restTime=restTime,partTime=partTime ,
+                    set=set,duration="", emojiID = 0, isDone = false, type = type, isSoundOn=isSoundOn )
+            }while(cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return workoutList
       }
-
-    //val create_routine_table = "create table if not exists $ROUTINE_TABLE_NAME("+
-    //                "$ID integer primary key autoincrement, "+
-    //                "$NAME varchar, "+
-    //                "$BODYPART varchar, "+
-    //                "$SETNUM int, "+
-    //                "$TIME int, "+
-    //                "$RESTTIME int, "+
-    //                "$PARTTIME int, "+
-    //                "$TYPE tinyint, "+
-    //                "$SOUND tinyint, "+
-    //                "$ISDAY tinyint, "+
-    //                "$DAYOFWEEK tinyint, "+
-    //                "$ENABLED tinyint);"
-    //        db!!.execSQL(create_routine_table)
     
         ////////////// Routine
     fun getAllRoutine(): ArrayList<RoutineData> {
