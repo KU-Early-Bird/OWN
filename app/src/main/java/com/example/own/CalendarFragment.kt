@@ -38,7 +38,7 @@ class CalendarFragment : Fragment() {
 
     // ownList members
     lateinit var ownListAdapter: OwnListAdapter
-    val ownList=ArrayList<OwnListData>()
+    var ownList=ArrayList<OwnListData>()
     var diaryData:DiaryData?=null
 
     // achieve members
@@ -189,9 +189,9 @@ class CalendarFragment : Fragment() {
                 binding!!.completeWorkout.visibility = View.GONE
 
                 // 운동 데이터 - 날짜에 해당하는 데이터 불러오기
-                // ownList = 날짜 데이터 반환 값(리스트)
-                // ownListAdapter.notifyDataSetChanged()
-                
+                ownList = ownDBHelper.getWorkoutOwnList(clickedDate!!)
+                ownListAdapter.items = ownList
+                ownListAdapter.notifyDataSetChanged()
 
                 if(diaryData!=null){
                     binding!!.writeDiary.visibility = View.GONE
@@ -199,8 +199,8 @@ class CalendarFragment : Fragment() {
                     binding!!.writeDiary.visibility = View.VISIBLE
                 }
 
-                // Test
-                Toast.makeText(activity,"과거", Toast.LENGTH_SHORT).show()
+//                // Test
+//                Toast.makeText(activity,"과거", Toast.LENGTH_SHORT).show()
 
             }
             // 미래
@@ -213,6 +213,9 @@ class CalendarFragment : Fragment() {
 
                 // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
                 // Test
+//                ownList = ownDBHelper.getRoutineOwnList(clickedDate!!)
+//                ownListAdapter.items = ownList
+//                ownListAdapter.notifyDataSetChanged()
                 Toast.makeText(activity,"미래", Toast.LENGTH_SHORT).show()
 
             }
@@ -220,7 +223,6 @@ class CalendarFragment : Fragment() {
             else{
                 initTodayLayout()
             }
-
         }
 
         // long Click 이벤트

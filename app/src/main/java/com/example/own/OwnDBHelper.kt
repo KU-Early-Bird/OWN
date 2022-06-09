@@ -14,6 +14,7 @@ import kotlin.collections.ArrayList
 
 
 class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+    val converter= Converter()
     companion object{
         val DB_NAME = "ownDB.db"
         val DB_VERSION =1
@@ -72,7 +73,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
         var create_workout_table ="create table if not exists $WORKOUT_TABLE_NAME(" +
                 "WID integer primary key autoincrement,"+
-                "$WORKOUT_DATE date primary key default (date('now')), " +
+                "$WORKOUT_DATE date default (date('now')), " +
                 "$WORKOUT_NAME text,"+
                 "$WORKOUT_BODY_PART text,"+
                 "$WORKOUT_ASSESSMENT text," +
@@ -107,7 +108,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
             return AchieveTableData(null,0,false )
 
 //        Toast.makeText(context, cursor.count.toString(), Toast.LENGTH_LONG).show()
-        val lateUpdate=getCalendarObj(cursor.getString(0))
+        val lateUpdate=converter.convertStrToCalender(cursor.getString(0))
         val ownwanDays = cursor.getString(1).toInt()
         val didComplete = getDidComplete(cursor.getString(2).toInt())
 
@@ -124,12 +125,6 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return flag == 1
     }
 
-    private fun getCalendarObj(dateStr:String):GregorianCalendar{
-        var dateList = dateStr.split('-')
-
-        val date = dateFormat.parse(dateStr)
-        return GregorianCalendar(dateList[0].toInt(), dateList[1].toInt(),dateList[2].toInt())
-    }
 
     public fun insertRecord(ownwanDays:Int,didComplete:Int) : Boolean{
         val values = ContentValues()
@@ -266,46 +261,42 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
 
-//    /*Workout data*/
-//    // 날짜 넣으면 그날 데이터 반환하기 ownList형태로
-//    public fun getWorkoutOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
-//        val ownList = ArrayList<OwnListData>()
-//        val dateStr = dateFormat.format(day.time)
-//        var strSql = "select * from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = '$dateStr';"
-//        val db = readableDatabase
-//        val cursor = db.rawQuery(strSql, null)
-//
-//        cursor.moveToFirst()
-//        if(cursor.count>0){
-//            do {
-//
-////              //    "$WORKOUT_DATE date, $WORKOUT_NAME text primary key default (date('now')), " +
-//                ////    "$WORKOUT_ASSESSMENT text," +
-//                ////    "$WORKOUT_SET integer," +
-//                ////    "$WORKOUT_DURATION text,"+
-//                ////    "$WORKOUT_EMOJI_ID integer,"+
-//                ////    "$WORKOUT_IS_DONE integer);"
-////                 val name=cursor.getString(1)
-//////                 val bodyPart=cursor.getString(3)
-////                 val set=cursor.getString(4).toInt()
-////                 val emoji=cursor.getString(4).toInt()
-////                val isDone= cursor.getString(1).toInt()==1
+    /*Workout data*/
+    // 날짜 넣으면 그날 데이터 반환하기 ownList형태로
+    public fun getWorkoutOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
+        val ownList = ArrayList<OwnListData>()
+        val dateStr = dateFormat.format(day.time)
+        val strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, " +
+                "${WORKOUT_SET}, ${WORKOUT_EMOJI_ID} " +
+                "from $WORKOUT_TABLE_NAME " +
+                "where $WORKOUT_DATE = '$dateStr';"
 
-////                var ownListData =
-////                    OwnListData(cursor.getString(1), cursor.getString(2), cursor.getString(3))
-////                ownList.add(ownListData)
-//            }while(cursor.moveToNext())
-//        }
-//
-//        cursor.close()
-//        db.close()
-//
-//        return ownList
-//    }
+        val db = readableDatabase
+        val cursor = db.rawQuery(strSql, null)
+
+        cursor.moveToFirst()
+        if(cursor.count>0){
+            do {
+                val calendar = converter.convertStrToCalender(cursor.getString(0))
+                val isDone = cursor.getString(1).toInt()==1
+                val name = cursor.getString(2)
+                val bodyPart = cursor.getString(3)
+                val set = cursor.getString(4).toInt()
+                val emoji= cursor.getString(5).toInt()
+
+                var ownListData = OwnListData(calendar,isDone,name,bodyPart,set,emoji)
+                ownList.add(ownListData)
+            }while(cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return ownList
+    }
 
     public fun getRoutineOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
         val ownList = ArrayList<OwnListData>()
-
         val dateStr = dateFormat.format(day.time)
 //        var strSql = "select * from $ROUTINE_TABLE_NAME;"
 //        val db = readableDatabase
@@ -355,29 +346,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     //                "$ENABLED tinyint);"
     //        db!!.execSQL(create_routine_table)
 
-    fun convertDayOfWeekToBitSet(date:GregorianCalendar):BitSet{
-        val calendar = Calendar.getInstance()
-        calendar.time = date.time // 일:1 ~ 토:7
-        var bitset = BitSet(7)
-        bitset[calendar.get(Calendar.DAY_OF_WEEK)-1] = true
-        return bitset
-    }
 
-    fun convertWeekRoutineToBitset(weekRoutine:Int):BitSet{
-        var bitset = BitSet(7)// 일월화수목금토 순?
-        var wr = weekRoutine
-        var i=0
-        var str=""
-        bitset[0]= true
-        bitset[i]
-        while (wr>1){
-            bitset[i] = (wr%2 == 1)
-            i++
-            wr/=2
-        }
-        bitset[i] = wr==1
-        return bitset
-    }
 
 
 
