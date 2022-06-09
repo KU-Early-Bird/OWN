@@ -107,6 +107,7 @@ class DiaryWriteFragment: Fragment() {
 
 
             val newdiarydata = DiaryData(newdiarydatadate, newdiarydatacontent, newdiarydataimage)
+            parentFragmentManager.popBackStack()
             var result = (activity as MainActivity).dbhelper.insertDiaryData(newdiarydata)
         }
 
