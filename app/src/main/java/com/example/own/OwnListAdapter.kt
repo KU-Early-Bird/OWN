@@ -31,15 +31,24 @@ class OwnListAdapter(var items:ArrayList<OwnListData>, val today: GregorianCalen
             if(items[pos].date.compareTo(today)==0){
                 ownListItem.setOnClickListener{onItemClickListener}
             }
-            // text
-            ownListEmoji.setImageResource(R.drawable.ic_baseline_mood_24)
+//            // text
+//            ownListEmoji.setImageResource(R.drawable.ic_baseline_mood_24)
 
             // emoji
             if(items[pos].isDone){
-                when(items[pos]){
-    //                0->
-    //                1->
-    //                2->
+                when(items[pos].emoji){
+                    1-> {
+                        ownListEmoji.setImageResource(R.drawable.icon_emoji1_background)
+                        ownListEmoji.setColorFilter(Color.GREEN)
+                    }
+                    2-> {
+                        ownListEmoji.setImageResource(R.drawable.icon_emoji2_background)
+                        ownListEmoji.setColorFilter(Color.YELLOW)
+                    }
+                    3-> {
+                        ownListEmoji.setImageResource(R.drawable.icon_emoji3_background)
+                        ownListEmoji.setColorFilter(Color.RED)
+                    }
                 }
                 ownListItem.setBackgroundResource(R.color.own_skyblue_darkBack)
                 ownListBodyPart.setBackgroundResource(R.color.own_skyblue_item_done)
