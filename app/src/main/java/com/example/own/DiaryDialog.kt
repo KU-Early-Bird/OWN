@@ -3,6 +3,7 @@ package com.example.own
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,29 +42,28 @@ class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val dateStr = Converter().convertStrToCalender(diaryData.Diary_Date)
+        val workoutList = ownDBHelper.getWorkoutList(dateStr)
+        adapter = DiaryDlgAdapter(workoutList) // 하지라님 데이터로 바꾸기
 
-        adapter = DiaryDlgAdapter(ArrayList<WorkoutData>()) // 하지라님 데이터로 바꾸기
 
-        binding.apply {
-            // 이미지 소스로 이미지 보여주기
-            var imagePath=diaryData.Diary_Image
-            if (File(imagePath).exists()) {
-                var bitmap = BitmapFactory.decodeFile(imagePath)
-                binding.diaryDlgImg.setImageBitmap(bitmap)
-            }
+        // 이미지 소스로 이미지 보여주기
+        var imagePath=diaryData.Diary_Image
+        if (File(imagePath).exists()) {
+            var bitmap = BitmapFactory.decodeFile(imagePath)
+            binding.diaryDlgImg.setImageBitmap(bitmap)
+        }
 
-            // 일기 내용
-            diaryDlgtext.text = diaryData.Diary_Content
+        // 일기 내용
+        binding.diaryDlgtext.text = diaryData.Diary_Content
 
-            // recycler view
-            diaryDlgRecycler.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
-            diaryDlgRecycler.adapter = adapter
+        // recycler view
+        binding.diaryDlgRecycler.layoutManager = LinearLayoutManager(activity ,LinearLayoutManager.VERTICAL,false)
+        binding.diaryDlgRecycler.adapter = adapter
 
-            //
-            diaryDlgDismissBtn.setOnClickListener {
-                dismiss()
-            }
-
+        //
+        binding.diaryDlgDismissBtn.setOnClickListener {
+            dismiss()
         }
 
 
