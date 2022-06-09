@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
+import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.fragment_calender.*
 
@@ -32,8 +33,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.tab_home-> supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
                 R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment()).commit()
                 R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
-//                R.id.tab_workout->
-
+                R.id.tab_workout-> supportFragmentManager.beginTransaction().replace(R.id.container, WorkoutFragment()).commit()
             }
             true
         }
