@@ -1,17 +1,16 @@
-package com.example.own
+package com.example.own.Diary
 
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.own.Diary.DiaryData
-import com.example.own.Workout.WorkoutData
+import com.example.own.DB.OwnDBHelper
+import com.example.own.Others.Converter
 import com.example.own.databinding.DiaryDialogBinding
 import java.io.File
 
@@ -19,7 +18,7 @@ import java.io.File
 class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
     lateinit var binding:DiaryDialogBinding
     lateinit var adapter: DiaryDlgAdapter
-    lateinit var ownDBHelper:OwnDBHelper
+    lateinit var ownDBHelper: OwnDBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

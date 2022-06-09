@@ -1,10 +1,10 @@
-package com.example.own
+package com.example.own.Home
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.own.R
 import com.example.own.databinding.DailyWorkoutRowBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -15,7 +15,7 @@ class OwnListAdapter(var items:ArrayList<OwnListData>, val today: GregorianCalen
          override fun onClick(p0: View?)
      }
 
-    var onItemClickListener:OnItemClickListener ?= null
+    var onItemClickListener: OnItemClickListener?= null
 
     inner class ViewHolder(val binding: DailyWorkoutRowBinding) : RecyclerView.ViewHolder(binding.root) {
     }

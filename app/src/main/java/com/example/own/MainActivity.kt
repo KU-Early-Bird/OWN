@@ -9,9 +9,16 @@ import android.view.MenuItem
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.drawerlayout.widget.DrawerLayout
+import com.example.own.DB.OwnDBHelper
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.Workout.WorkoutData
+import com.example.own.Home.AchieveTableData
+import com.example.own.Home.LevelGridAdapter
+import com.example.own.Home.YolkGridAdapter
+import com.example.own.Routine.RoutineFragment
 import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
 import java.util.*
@@ -35,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 //    val viewModel:AchieveDataViewModel by viewModels()
     var yolks = ArrayList<Int>()
     val levels = ArrayList<Int>()
-    lateinit var yolkGridAdapter:YolkGridAdapter
-    lateinit var levelGridAdapter:LevelGridAdapter
+    lateinit var yolkGridAdapter: YolkGridAdapter
+    lateinit var levelGridAdapter: LevelGridAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +76,9 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.tab_home-> supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
                 R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment(),"DiaryTab").commit()
-                R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
+                R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,
+                    RoutineFragment()
+                ).commit()
                 R.id.tab_workout-> supportFragmentManager.beginTransaction().replace(R.id.container, WorkoutFragment()).commit()
             }
 
@@ -96,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     ownwanDays = achieveTableData.ownwanDays
                     calcLevelAndYolk()
                     initAchieveLayout()
-                   
+
                     binding.drawerLayout.openDrawer(binding.drawerNav)
                 }
                 true

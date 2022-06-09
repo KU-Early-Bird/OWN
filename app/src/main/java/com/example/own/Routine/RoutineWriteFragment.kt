@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import com.example.own.MainActivity
-import com.example.own.OwnDBHelper
 import com.example.own.R
 import com.example.own.databinding.FragmentRoutineBinding
 import com.example.own.databinding.FragmentRoutineWriteBinding
@@ -17,15 +16,13 @@ import com.example.own.databinding.FragmentRoutineWriteBinding
 class RoutineWriteFragment : Fragment() {
     var rtData = RoutineData()
     var binding: FragmentRoutineWriteBinding?=null
-    lateinit var rtDBHelper:OwnDBHelper
+    var rtbundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rtDBHelper = (activity as MainActivity).dbhelper
         setFragmentResultListener("rtdata"){requestKey, bundle ->
             rtData.id = bundle.getInt("id")
+            var rtDBHelper = (activity as MainActivity).dbhelper
             rtData = rtDBHelper.findRoutine(rtData.id)
-            Log.d("routine",rtData.toString())
-
         }
     }
 
@@ -35,14 +32,53 @@ class RoutineWriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRoutineWriteBinding.inflate(inflater,container,false)
-
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding!!.apply {
+            if(rtbundle.getInt("clicked") == 1) {
+                nameedit.setText(rtData.name)
+                bodyPartedit.setText(rtData.bodyPart)
+                setNumedit.setText(rtData.setNum.toString())
+                Timesedit.setText(rtData.time.toString())
+                restTimeedit.setText(rtData.restTime.toString())
+                partTimedit.setText(rtData.partTime.toString())
+                typecheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    typecheckbox.isChecked = rtData.type
+                }
+                soundcheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    soundcheckbox.isChecked = rtData.sound
+                }
+                isdaycheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    isdaycheckbox.isChecked = rtData.isDay
+                }
+                suncheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    suncheckbox.isChecked = rtData.dayOfWeek[0]
+                }
+                moncheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    moncheckbox.isChecked = rtData.dayOfWeek[1]
+                }
+                tuecheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    tuecheckbox.isChecked = rtData.dayOfWeek[2]
+                }
+                wedcheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    wedcheckbox.isChecked = rtData.dayOfWeek[3]
+                }
+                thucheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    thucheckbox.isChecked = rtData.dayOfWeek[4]
+                }
+                fricheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    fricheckbox.isChecked = rtData.dayOfWeek[5]
+                }
+                satcheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    satcheckbox.isChecked = rtData.dayOfWeek[6]
+                }
+            }
+            //typecheckbox.setOnCheckedChangeListener{}
             complete.setOnClickListener {
+                var rtDBHelper = (activity as MainActivity).dbhelper
                 rtData.name = nameedit.text.toString()
                 rtData.bodyPart = bodyPartedit.text.toString()
                 rtData.setNum = setNumedit.text.toString().toInt()

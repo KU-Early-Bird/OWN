@@ -1,5 +1,7 @@
 package com.example.own.Routine
 
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
@@ -7,17 +9,26 @@ import com.example.own.databinding.RoutineRowBinding
 
 class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<RoutineAdapter.ViewHolder>() {
 
-    interface OnItemClickListener{
-        fun OnItemClick(data:RoutineData)
+    interface OnTextClickListener{
+        fun OnTextClick(data:RoutineData)
+    }
+    interface OnBtnClickListener{
+        fun OnBtnClick(data:RoutineData)
     }
 
-    var itemClickListener:OnItemClickListener?=null
+    var textClickListener:OnTextClickListener?=null
+    var btnClickListener:OnBtnClickListener?=null
 
     inner class ViewHolder(val binding: RoutineRowBinding) : RecyclerView.ViewHolder(binding.root){
-        val text = binding.relativelayout
+        val text = binding.background
+        val enabled = binding.enabled
         init {
             text.setOnClickListener{
-                itemClickListener?.OnItemClick(items[adapterPosition])
+                textClickListener?.OnTextClick(items[adapterPosition])
+            }
+            enabled.setOnClickListener {
+                enabled.setText(if(!items[adapterPosition].enabled) "ON" else "OFF")
+                btnClickListener?.OnBtnClick(items[adapterPosition])
             }
         }
     }
@@ -28,6 +39,7 @@ class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<Ro
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("routine",items[position].toString())
         holder.binding.id.text = items[position].id.toString()
         holder.binding.name.text = items[position].name
         holder.binding.bodyPart.text = items[position].bodyPart
@@ -52,6 +64,7 @@ class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<Ro
             holder.binding.date.text = str
         }
         holder.binding.sets.text = items[position].setNum.toString() + "회"
+        holder.binding.enabled.setText(if(items[position].enabled) "ON" else "OFF")
     }
 
     override fun getItemCount(): Int {

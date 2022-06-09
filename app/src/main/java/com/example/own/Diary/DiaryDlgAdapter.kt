@@ -1,10 +1,11 @@
-package com.example.own
+package com.example.own.Diary
 
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.own.Workout.WorkoutData
+import com.example.own.R
 import com.example.own.databinding.DiaryDlgRowBinding
 
 class DiaryDlgAdapter(val workouts:ArrayList<WorkoutData>):RecyclerView.Adapter<DiaryDlgAdapter.ViewHolder>(){
