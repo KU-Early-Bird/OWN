@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initLayout() {
+        supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
         // 하단바 리스너
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
                 R.id.tab_workout-> supportFragmentManager.beginTransaction().replace(R.id.container, WorkoutFragment()).commit()
             }
+
+            this.supportFragmentManager.popBackStackImmediate()
             true
         }
         initAchieve()
