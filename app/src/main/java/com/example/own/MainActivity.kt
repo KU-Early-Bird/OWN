@@ -9,15 +9,10 @@ import android.view.MenuItem
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.viewModels
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
-import com.example.own.Workout.WorkoutData
 import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
-import com.example.own.databinding.FragmentCalenderBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
