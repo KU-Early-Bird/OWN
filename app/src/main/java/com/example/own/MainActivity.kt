@@ -101,12 +101,12 @@ class MainActivity : AppCompatActivity() {
                 if(binding.drawerLayout.isDrawerOpen(binding.drawerNav))
                     binding.drawerLayout.closeDrawer(binding.drawerNav)
                 else{
+                    binding.drawerLayout.openDrawer(binding.drawerNav)
                     achieveTableData = dbhelper.readAchieve()
                     ownwanDays = achieveTableData.ownwanDays
                     calcLevelAndYolk()
                     initAchieveLayout()
 
-                    binding.drawerLayout.openDrawer(binding.drawerNav)
                 }
                 true
             }
@@ -148,6 +148,7 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+
 
         initAchieveLayout()
     }
