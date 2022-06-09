@@ -9,13 +9,13 @@ import com.example.own.databinding.DailyWorkoutRowBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
-class OwnListAdapter(val items:ArrayList<OwnListData>, val today: GregorianCalendar?) : RecyclerView.Adapter<OwnListAdapter.ViewHolder>() {
+class OwnListAdapter(var items:ArrayList<OwnListData>, val today: GregorianCalendar?) : RecyclerView.Adapter<OwnListAdapter.ViewHolder>() {
 
      interface OnItemClickListener : View.OnClickListener {
          override fun onClick(p0: View?)
      }
 
-    val onItemClickListener:OnItemClickListener ?= null
+    var onItemClickListener:OnItemClickListener ?= null
 
     inner class ViewHolder(val binding: DailyWorkoutRowBinding) : RecyclerView.ViewHolder(binding.root) {
     }
