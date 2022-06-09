@@ -298,7 +298,8 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     public fun getRoutineOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
         val ownList = ArrayList<OwnListData>()
         val dateStr = dateFormat.format(day.time)
-//        var strSql = "select * from $ROUTINE_TABLE_NAME;"
+//        var strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, " +
+//                "${WORKOUT_SET} from $ROUTINE_TABLE_NAME;"
 //        val db = readableDatabase
 //        val cursor = db.rawQuery(strSql, null)
 //
