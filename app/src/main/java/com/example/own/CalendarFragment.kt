@@ -124,6 +124,9 @@ class CalendarFragment : Fragment() {
         // btn 초기화
         initButton()
 
+        // 오늘 날짜에 맞춰 화면 구성 
+        initTodayLayout()
+
     }
 
     private fun initButton() {
@@ -215,24 +218,7 @@ class CalendarFragment : Fragment() {
             }
             // 현재
             else{
-                // 운동 완료 여부와 기록 여부에 따라  - 운동 DB & 기록 DB 에서 받아오기(?)
-                val didComplete = false;
-
-                binding!!.apply {
-                    if(!didComplete){
-                        completeWorkout.visibility = View.VISIBLE
-                        writeDiary.visibility = View.GONE
-                    }else if(didComplete && diaryData==null){
-                        completeWorkout.visibility = View.GONE
-                        writeDiary.visibility = View.VISIBLE
-                    }else if (didComplete && diaryData!=null){
-                        completeWorkout.visibility = View.GONE
-                        writeDiary.visibility = View.GONE
-                    }
-
-                }
-                // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
-                Toast.makeText(activity,"현재", Toast.LENGTH_SHORT).show()
+                initTodayLayout()
             }
 
         }
@@ -252,7 +238,27 @@ class CalendarFragment : Fragment() {
 
         }
 
+    }
 
+    private fun initTodayLayout(){
+        // 운동 완료 여부와 기록 여부에 따라  - 운동 DB & 기록 DB 에서 받아오기(?)
+        val didComplete = false;
+
+        binding!!.apply {
+            if(!didComplete){
+                completeWorkout.visibility = View.VISIBLE
+                writeDiary.visibility = View.GONE
+            }else if(didComplete && diaryData==null){
+                completeWorkout.visibility = View.GONE
+                writeDiary.visibility = View.VISIBLE
+            }else if (didComplete && diaryData!=null){
+                completeWorkout.visibility = View.GONE
+                writeDiary.visibility = View.GONE
+            }
+
+        }
+        // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
+        Toast.makeText(activity,"현재", Toast.LENGTH_SHORT).show()
 
     }
 
