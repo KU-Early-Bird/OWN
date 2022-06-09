@@ -1,16 +1,14 @@
 package com.example.own
 
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
-import android.database.sqlite.SQLiteDatabase
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
-
+import kotlinx.android.synthetic.main.fragment_calender.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
@@ -48,9 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     // achieve 아이콘 클릭 시 achieve nav open
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        val drawerNav = findViewById<NavigationView>(R.id.drawerNav)
+//        // Handle item selection
         return when (item.itemId) {
             R.id.achieveIcon -> {
                 drawerLayout.openDrawer(drawerNav)
@@ -59,4 +55,5 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 }
