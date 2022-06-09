@@ -18,7 +18,6 @@ import com.example.own.databinding.FragmentRoutineBinding
 
 class RoutineFragment : Fragment(){
     lateinit var binding: FragmentRoutineBinding
-    var rtDBHelper = (activity as MainActivity).dbhelper
     lateinit var rtRecyclerView: RecyclerView
     lateinit var rtAdapter: RoutineAdapter
     var rtData:ArrayList<RoutineData> = ArrayList()
@@ -42,10 +41,12 @@ class RoutineFragment : Fragment(){
     }
 
     private fun initDB(){
+        var rtDBHelper = (activity as MainActivity).dbhelper
         rtData = rtDBHelper.getAllRoutine()
     }
 
     private fun initRecyclerView(){
+        var rtDBHelper = (activity as MainActivity).dbhelper
         rtRecyclerView = binding.routinerecyclerview
         rtRecyclerView.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.VERTICAL, false)
