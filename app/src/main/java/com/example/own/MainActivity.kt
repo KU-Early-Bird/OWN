@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.tab_home-> supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
                 R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment(),"DiaryTab").commit()
-                R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
+                R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,RoutineFragment()).commit()
                 R.id.tab_workout-> supportFragmentManager.beginTransaction().replace(R.id.container, WorkoutFragment()).commit()
             }
 
