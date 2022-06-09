@@ -1,18 +1,15 @@
 package com.example.own.Routine
 
-import android.content.Intent
-import android.database.Cursor
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.own.MainActivity
-import com.example.own.OwnDBHelper
+import com.example.own.DB.OwnDBHelper
 import com.example.own.R
 import com.example.own.databinding.FragmentRoutineBinding
 

@@ -17,7 +17,7 @@
         android:alpha="0.88"
         android:rotation="0"
         android:rotationY="-125"
-        android:src="@mipmap/pattern2"
+        android:src="@drawable/line"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -30,7 +30,7 @@
         android:alpha="0.88"
         android:rotationX="0"
         android:rotationY="0"
-        android:src="@mipmap/pattern2"
+        android:src="@drawable/line"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -44,7 +44,7 @@
         android:rotation="90"
         android:rotationX="-200"
         android:rotationY="0"
-        android:src="@mipmap/pattern2"
+        android:src="@drawable/line"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -56,7 +56,7 @@
         android:layout_marginTop="375dp"
         android:alpha="0.2"
         android:rotation="30"
-        android:src="@mipmap/pattern3"
+        android:src="@drawable/wave"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -113,7 +113,7 @@
         android:layout_marginEnd="365dp"
         android:alpha="0.2"
         android:rotation="45"
-        android:src="@mipmap/pattern3"
+        android:src="@drawable/wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -125,7 +125,7 @@
         android:layout_marginTop="595dp"
         android:alpha="0.55"
         android:rotation="45"
-        android:src="@mipmap/pattern3"
+        android:src="@drawable/wave"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -139,7 +139,7 @@
         android:rotation="0"
         android:rotationX="0"
         android:rotationY="0"
-        android:src="@mipmap/pattern1"
+        android:src="@drawable/crooked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,7 +151,7 @@
         android:layout_marginTop="585dp"
         android:alpha="0.8"
         android:rotation="90"
-        android:src="@mipmap/pattern1"
+        android:src="@drawable/crooked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -163,7 +163,7 @@
         android:layout_marginTop="385dp"
         android:alpha="0.8"
         android:rotation="180"
-        android:src="@mipmap/pattern1"
+        android:src="@drawable/crooked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -176,7 +176,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.307">
+        app:layout_constraintVertical_bias="0.289">
 
         <Button
             android:id="@+id/startBtn"
@@ -243,15 +243,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="376dp"
-        android:layout_height="274dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/completeWorkoutBtn"
+        android:layout_width="379dp"
+        android:layout_height="331dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -259,8 +257,7 @@
         android:id="@+id/completeWorkoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginBottom="50dp"
         android:layout_weight="0"
         android:backgroundTint="@color/customYellow"
         android:shadowColor="#000"
@@ -270,10 +267,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.897"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        app:layout_constraintVertical_bias="1.0"
         app:strokeColor="@color/customDarkEmerald"
         app:strokeWidth="2dp" />
 

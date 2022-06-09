@@ -1,4 +1,4 @@
-package com.example.own
+package com.example.own.Diary
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.own.Diary.DiaryData
+import com.example.own.Home.OwnListData
 import com.example.own.databinding.DiaryDialogBinding
 import java.io.File
 

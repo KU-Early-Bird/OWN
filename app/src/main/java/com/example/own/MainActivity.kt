@@ -8,12 +8,15 @@ import android.view.MenuItem
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.drawerlayout.widget.DrawerLayout
+import com.example.own.DB.OwnDBHelper
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
+import com.example.own.Home.AchieveTableData
+import com.example.own.Home.CalendarFragment
+import com.example.own.Home.LevelGridAdapter
+import com.example.own.Home.YolkGridAdapter
 import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
-import com.example.own.databinding.FragmentCalenderBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -31,11 +34,11 @@ class MainActivity : AppCompatActivity() {
     var ownwanDays = 155
     var yolkNum =0
     var level=0
-    lateinit var achieveTableData:AchieveTableData
+    lateinit var achieveTableData: AchieveTableData
     var yolks = ArrayList<Int>()
     val levels = ArrayList<Int>()
-    lateinit var yolkGridAdapter:YolkGridAdapter
-    lateinit var levelGridAdapter:LevelGridAdapter
+    lateinit var yolkGridAdapter: YolkGridAdapter
+    lateinit var levelGridAdapter: LevelGridAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,20 +1,17 @@
-package com.example.own
+package com.example.own.Home
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.GridView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.own.*
+import com.example.own.DB.OwnDBHelper
 import com.example.own.Diary.DiaryData
+import com.example.own.Diary.DiaryDialog
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.databinding.FragmentCalenderBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -24,7 +21,7 @@ import kotlin.collections.ArrayList
 
 class CalendarFragment : Fragment() {
 
-    lateinit var achieveTableData:AchieveTableData
+    lateinit var achieveTableData: AchieveTableData
     // calendar
     var today:GregorianCalendar?=null
     var clickedDate:GregorianCalendar?=null
@@ -241,7 +238,7 @@ class CalendarFragment : Fragment() {
 
         // 리사이클러 뷰 어댑터
         ownListAdapter = OwnListAdapter(ownList,today)
-        ownListAdapter.onItemClickListener= object : OwnListAdapter.OnItemClickListener{
+        ownListAdapter.onItemClickListener= object : OwnListAdapter.OnItemClickListener {
             override fun onClick(p0: View?) {
                 val fragTransaction = requireActivity().supportFragmentManager.beginTransaction()
 //                fragTransaction.replace(R.id.container,) // workout fragment으로 전환

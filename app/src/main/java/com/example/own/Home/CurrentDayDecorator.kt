@@ -1,7 +1,8 @@
-package com.example.own
+package com.example.own.Home
 
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.FragmentActivity
+import com.example.own.R
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
@@ -13,7 +14,9 @@ class CurrentDayDecorator(private val context: FragmentActivity?):DayViewDecorat
 
     override fun decorate(view: DayViewFacade?) {
         if (view != null) {
-            view.setBackgroundDrawable(AppCompatResources.getDrawable(context!!,R.drawable.ic_baseline_panorama_fish_eye_24)!!)
+            view.setBackgroundDrawable(AppCompatResources.getDrawable(context!!,
+                R.drawable.ic_baseline_panorama_fish_eye_24
+            )!!)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.own
+package com.example.own.DB
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,9 +6,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import android.widget.Toast
+import com.example.own.Others.Converter
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.own.Diary.DiaryData
+import com.example.own.Home.AchieveTableData
+import com.example.own.Home.OwnListData
 import com.example.own.Routine.RoutineData
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import kotlin.collections.ArrayList
@@ -126,7 +129,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
     // 현재 테이블 내용 가져오기 - 반환해야할 것 : 날짜 & ownwanDays (어차피 한줄)
-    public fun readAchieve():AchieveTableData{
+    public fun readAchieve(): AchieveTableData {
         // 질의문으로 데이터 베이스 모든 내용 가져오기
         val strSql = "select * from $ACHIEVE_TABLE_NAME;"
         val db = readableDatabase
@@ -298,7 +301,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val ownList = ArrayList<OwnListData>()
         val dateStr = dateFormat.format(day.time)
         val strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, " +
-                "${WORKOUT_SET}, ${WORKOUT_EMOJI_ID} " +
+                "$WORKOUT_SET, $WORKOUT_EMOJI_ID " +
                 "from $WORKOUT_TABLE_NAME " +
                 "where $WORKOUT_DATE = '$dateStr';"
 

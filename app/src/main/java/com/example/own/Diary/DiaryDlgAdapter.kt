@@ -1,8 +1,9 @@
-package com.example.own
+package com.example.own.Diary
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.own.Home.OwnListData
 import com.example.own.databinding.DiaryDlgRowBinding
 
 class DiaryDlgAdapter(val workouts:ArrayList<OwnListData>):RecyclerView.Adapter<DiaryDlgAdapter.ViewHolder>(){

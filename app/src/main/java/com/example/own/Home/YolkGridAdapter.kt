@@ -1,4 +1,4 @@
-package com.example.own
+package com.example.own.Home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import androidx.fragment.app.FragmentActivity
+import com.example.own.R
 
 
 class YolkGridAdapter(val context: FragmentActivity?, val yolks:ArrayList<Int>): BaseAdapter() {

@@ -6,18 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import com.example.own.MainActivity
-import com.example.own.OwnDBHelper
+import com.example.own.DB.OwnDBHelper
 import com.example.own.R
-import com.example.own.databinding.FragmentRoutineBinding
 import com.example.own.databinding.FragmentRoutineWriteBinding
 
 class RoutineWriteFragment : Fragment() {
     var rtData = RoutineData()
     var binding: FragmentRoutineWriteBinding?=null
-    lateinit var rtDBHelper:OwnDBHelper
+    lateinit var rtDBHelper: OwnDBHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         rtDBHelper = (activity as MainActivity).dbhelper
