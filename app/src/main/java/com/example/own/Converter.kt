@@ -35,4 +35,8 @@ class Converter {
         var dateList = dateStr.split('-')
         return GregorianCalendar(dateList[0].toInt(), dateList[1].toInt(),dateList[2].toInt())
     }
+
+    fun convertCalenderToStr(calendar:GregorianCalendar):String{
+        return dateFormat.format(calendar.time)
+    }
 }
