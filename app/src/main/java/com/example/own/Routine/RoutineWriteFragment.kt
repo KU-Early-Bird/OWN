@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import com.example.own.MainActivity
-import com.example.own.OwnDBHelper
 import com.example.own.R
 import com.example.own.databinding.FragmentRoutineBinding
 import com.example.own.databinding.FragmentRoutineWriteBinding
@@ -18,10 +17,9 @@ class RoutineWriteFragment : Fragment() {
     var rtData = RoutineData()
     var binding: FragmentRoutineWriteBinding?=null
     var rtbundle = Bundle()
-    lateinit var rtDBHelper:OwnDBHelper
+    var rtDBHelper = (activity as MainActivity).dbhelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rtDBHelper = (activity as MainActivity).dbhelper
         setFragmentResultListener("rtdata"){requestKey, bundle ->
             rtData.id = bundle.getInt("id")
             rtData = rtDBHelper.findRoutine(rtData.id)
