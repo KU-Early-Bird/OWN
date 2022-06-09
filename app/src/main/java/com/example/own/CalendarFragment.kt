@@ -30,7 +30,6 @@ class CalendarFragment : Fragment() {
     var today:GregorianCalendar?=null
     var clickedDate:GregorianCalendar?=null
     val dateFomatter = SimpleDateFormat("yyyy-MM-dd")
-
     lateinit var mainActivity: MainActivity
 
     // ownList members
