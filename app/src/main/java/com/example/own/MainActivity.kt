@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     var yolkNum =0
     var level=0
     lateinit var achieveTableData:AchieveTableData
+    val viewModel:AchieveDataViewModel by viewModels()
     var yolks = ArrayList<Int>()
     val levels = ArrayList<Int>()
     lateinit var yolkGridAdapter:YolkGridAdapter
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         dbhelper= OwnDBHelper(this)
         database = dbhelper.writableDatabase
+//        viewModel.achieveData.observe(this,Observer{ initAchieve() })
         initLayout()
     }
 
@@ -52,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.tab_home-> supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
-                R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment()).commit()
+                R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment(),"DiaryTab").commit()
                 R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
                 R.id.tab_workout-> supportFragmentManager.beginTransaction().replace(R.id.container, WorkoutFragment()).commit()
             }

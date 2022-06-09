@@ -206,6 +206,7 @@ class CalendarFragment : Fragment() {
                 completeWorkout.setOnClickListener {
                     achieveTableData.ownwanDays+=1
                     ownDBHelper.updateAchieve(achieveTableData.ownwanDays, true)
+                    achieveTableData = ownDBHelper.readAchieve()
                     initTodayLayout()
                 }
 
