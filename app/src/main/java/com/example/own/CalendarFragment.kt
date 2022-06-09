@@ -139,16 +139,15 @@ class CalendarFragment : Fragment() {
             clickedDate = GregorianCalendar(date.year,date.month-1,date.day)
             diaryData = ownDBHelper.getDiaryData(clickedDate!!); // 기록 데이터 존재여부 확인
 
+            // 운동 데이터 - 날짜에 해당하는 데이터 불러오기
+            ownList = ownDBHelper.getWorkoutOwnList(clickedDate!!)
+            ownListAdapter.items = ownList
+            ownListAdapter.notifyDataSetChanged()
 
             // 과거
             if(clickedDate!!.compareTo(today)<0){
                 // 운동 완료 버튼 안보이게 처리 (자동 완료 처리되기 때문)
                 binding!!.completeWorkout.visibility = View.GONE
-
-                // 운동 데이터 - 날짜에 해당하는 데이터 불러오기
-                ownList = ownDBHelper.getWorkoutOwnList(clickedDate!!)
-                ownListAdapter.items = ownList
-                ownListAdapter.notifyDataSetChanged()
 
                 if(diaryData!=null){
                     binding!!.writeDiary.visibility = View.GONE
@@ -166,11 +165,6 @@ class CalendarFragment : Fragment() {
                     completeWorkout.visibility =View.GONE
                 }
 
-                // 루틴 데이터 - 이날 요일에 해당하는 데이터 리스트 리턴 받기
-                // Test
-//                ownList = ownDBHelper.getRoutineOwnList(clickedDate!!)
-//                ownListAdapter.items = ownList
-//                ownListAdapter.notifyDataSetChanged()
                 Toast.makeText(activity,"미래", Toast.LENGTH_SHORT).show()
 
             }
