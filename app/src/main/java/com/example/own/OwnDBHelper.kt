@@ -330,6 +330,47 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return ownList
     }
 
+    // 현재 테이블 내용 가져오기 - 반환해야할 것 : 날짜 & ownwanDays (어차피 한줄)
+    public fun getWorkoutList(calendar: GregorianCalendar):ArrayList<WorkoutData>{
+        // 질의문으로 데이터 베이스 모든 내용 가져오기
+        val workoutList = ArrayList<WorkoutData>()
+        val dateStr = converter.convertCalenderToStr(calendar)
+        Log.d("date",dateStr)
+        val strSql = "select * from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = '$dateStr';"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strSql,null) // 조건이 없어서 null
+
+        // cursor에서 데이터 읽기
+        cursor.moveToFirst()
+
+        Log.d("cursor",cursor.count.toString())
+
+        if(cursor.count>0){
+            do {
+                val isDone = cursor.getString(cursor.getColumnIndex(WORKOUT_IS_DONE).toInt()).toInt()==1
+                if(!isDone){
+                    val name = cursor.getString(cursor.getColumnIndex(WORKOUT_NAME).toInt())
+                    val bodyPart = cursor.getString(cursor.getColumnIndex(WORKOUT_BODY_PART).toInt())
+                    val set = cursor.getString(cursor.getColumnIndex(WORKOUT_SET).toInt()).toInt()
+                    val emoji = cursor.getString(cursor.getColumnIndex(WORKOUT_EMOJI_ID).toInt()).toInt()
+                    val assessment=cursor.getString(cursor.getColumnIndex(WORKOUT_ASSESSMENT).toInt())
+
+                    var workoutData=WorkoutData(id =0,date = dateStr,workoutName = name,
+                        bodyPart=bodyPart, assessment = assessment,count=0,restTime=0,partTime=0 ,
+                        set=set,duration="", emojiID = emoji, isDone = true, type = 0, isSoundOn=false )
+                    workoutList.add(workoutData)
+
+                }
+
+            }while(cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        return workoutList
+    }
+
+
     public fun getRoutineWorkoutList(day: GregorianCalendar):ArrayList<WorkoutData>{
         val workoutList = ArrayList<WorkoutData>()
         var strSql = "select *  from $ROUTINE_TABLE_NAME"
@@ -372,6 +413,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 var workoutData=WorkoutData(id =id,date = dateStr,workoutName = name,
                     bodyPart=bodyPart, assessment = "",count=count,restTime=restTime,partTime=partTime ,
                     set=set,duration="", emojiID = 0, isDone = false, type = type, isSoundOn=isSoundOn )
+                workoutList.add(workoutData)
             }while(cursor.moveToNext())
         }
 
@@ -383,12 +425,11 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
     public fun deleteWorkout(calendar: GregorianCalendar){
         val dateStr = converter.convertCalenderToStr(calendar)
-        val strSql = "delete from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = dateStr;"
+        val strSql = "delete from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = $dateStr;"
         val db = writableDatabase
         var flag = db.delete(WORKOUT_TABLE_NAME,null,null)
         if(flag==-1)
             Toast.makeText(context,"fail",Toast.LENGTH_SHORT).show()
-
         db.close()
     }
 
