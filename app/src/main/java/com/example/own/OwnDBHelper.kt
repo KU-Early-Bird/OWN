@@ -95,7 +95,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$WORKOUT_NAME text,"+
                 "$WORKOUT_BODY_PART text,"+
                 "$WORKOUT_ASSESSMENT text," +
-                "$WORKOUT_TYPE tinyint, "
+                "$WORKOUT_TYPE tinyint, "+
                 "$WORKOUT_SET integer," +
                 "$WORKOUT_RESTTIME int, "+
                 "$WORKOUT_PARTTIME int, "+
@@ -381,8 +381,21 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
         return workoutList
       }
-    
-        ////////////// Routine
+
+    public fun deleteWorkout(calendar: GregorianCalendar){
+        val dateStr = converter.convertCalenderToStr(calendar)
+        val strSql = "delete from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = dateStr;"
+        val db = writableDatabase
+        var flag = db.delete(WORKOUT_TABLE_NAME,null,null)
+        if(flag==-1)
+            Toast.makeText(context,"fail",Toast.LENGTH_SHORT).show()
+
+        db.close()
+    }
+
+
+
+    ////////////// Routine
     fun getAllRoutine(): ArrayList<RoutineData> {
         var rtData = ArrayList<RoutineData>()
         val strsql = "select * from $ROUTINE_TABLE_NAME;"
