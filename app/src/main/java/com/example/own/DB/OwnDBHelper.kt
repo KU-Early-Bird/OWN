@@ -415,18 +415,19 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 var time = cursor.getString(cursor.getColumnIndex("time").toString().toInt()).toInt()
                 var restTime = cursor.getString(cursor.getColumnIndex("resttime").toString().toInt()).toInt()
                 var partTime = cursor.getString(cursor.getColumnIndex("parttime").toString().toInt()).toInt()
-                var type = cursor.getColumnIndex("type").toString().toInt() == 0
-                var sound =cursor.getColumnIndex("sound").toString().toInt() == 0
-                var isDay =cursor.getColumnIndex("isday").toString().toInt() == 0
+                var type = cursor.getString(cursor.getColumnIndex("type").toString().toInt()).toInt() == 0
+                var sound = cursor.getString(cursor.getColumnIndex("sound").toString().toInt()).toInt() == 0
+                var isDay = cursor.getString(cursor.getColumnIndex("isday").toString().toInt()).toInt() == 0
                 var dayofweek = cursor.getString(cursor.getColumnIndex("dayofweek").toString().toInt()).toInt()
                 var dayOfWeek = BooleanArray(7)
                 for (j in 6 downTo 0) {
-                    dayOfWeek[j]
+                    dayOfWeek[j] =
                         if (dayofweek % 2 == 0) false
                         else true
+                    Log.d("rtdatacheck",j.toString() + " ::::: " + dayOfWeek[j])
                     dayofweek = dayofweek / 2
                 }
-                var enabled =cursor.getColumnIndex("enabled").toString().toInt() == 0
+                var enabled = cursor.getString(cursor.getColumnIndex("enabled").toString().toInt()).toInt() == 0
                 rtData.add(
                     RoutineData(id, name, bodyPart, setNum, time, restTime, partTime, type, sound, isDay, dayOfWeek, enabled)
                 )
@@ -452,17 +453,15 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         rtData.time = cursor.getString(cursor.getColumnIndex("time").toString().toInt()).toInt()
         rtData.restTime = cursor.getString(cursor.getColumnIndex("resttime").toString().toInt()).toInt()
         rtData.partTime = cursor.getString(cursor.getColumnIndex("parttime").toString().toInt()).toInt()
-        rtData.type = cursor.getColumnIndex("type").toString().toInt() == 0
-        rtData.sound =cursor.getColumnIndex("sound").toString().toInt() == 0
-        rtData.isDay =cursor.getColumnIndex("isday").toString().toInt() == 0
+        rtData.type = cursor.getString(cursor.getColumnIndex("type").toString().toInt()).toInt() == 0
+        rtData.sound = cursor.getString(cursor.getColumnIndex("sound").toString().toInt()).toInt() == 0
+        rtData.isDay = cursor.getString(cursor.getColumnIndex("isday").toString().toInt()).toInt() == 0
         var dayofweek = cursor.getString(cursor.getColumnIndex("dayofweek").toString().toInt()).toInt()
         for(j in 6 downTo 0) {
-            rtData.dayOfWeek[j] =
-                if (dayofweek % 2 == 0) false
-                else true
+            rtData.dayOfWeek[j] = dayofweek % 2 == 0
             dayofweek = dayofweek / 2
         }
-        rtData.enabled =cursor.getColumnIndex("enabled").toString().toInt() == 0
+        rtData.enabled = cursor.getString(cursor.getColumnIndex("enabled").toString().toInt()).toInt() == 0
         cursor.close()
         db.close()
         return rtData
@@ -526,8 +525,4 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
         return flag
     }
-
-
-
-
 }
