@@ -17,11 +17,11 @@ class RoutineWriteFragment : Fragment() {
     var rtData = RoutineData()
     var binding: FragmentRoutineWriteBinding?=null
     var rtbundle = Bundle()
-    var rtDBHelper = (activity as MainActivity).dbhelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFragmentResultListener("rtdata"){requestKey, bundle ->
             rtData.id = bundle.getInt("id")
+            var rtDBHelper = (activity as MainActivity).dbhelper
             rtData = rtDBHelper.findRoutine(rtData.id)
         }
     }
@@ -78,6 +78,7 @@ class RoutineWriteFragment : Fragment() {
             }
             //typecheckbox.setOnCheckedChangeListener{}
             complete.setOnClickListener {
+                var rtDBHelper = (activity as MainActivity).dbhelper
                 rtData.name = nameedit.text.toString()
                 rtData.bodyPart = bodyPartedit.text.toString()
                 rtData.setNum = setNumedit.text.toString().toInt()
