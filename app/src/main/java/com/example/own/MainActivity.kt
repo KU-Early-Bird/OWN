@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initLayout() {
+        // 초기화면 설정
+        supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
+
         // 하단바 리스너
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
