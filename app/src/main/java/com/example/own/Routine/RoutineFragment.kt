@@ -3,6 +3,7 @@ package com.example.own.Routine
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +52,7 @@ class RoutineFragment : Fragment(){
         rtRecyclerView.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.VERTICAL, false)
         rtAdapter = RoutineAdapter(rtData)
-        rtAdapter.textClickListener = object : RoutineAdapter.OnItemClickListener{
+        rtAdapter.textClickListener = object : RoutineAdapter.OnTextClickListener{
             override fun OnTextClick(data:RoutineData){
                 var rtdata = Bundle()
                 rtdata.putInt("id",data.id)
@@ -59,15 +60,15 @@ class RoutineFragment : Fragment(){
                 setFragmentResult("rtdata", rtdata)
                 parentFragmentManager.beginTransaction().replace(R.id.container,RoutineWriteFragment()).commit()
             }
-
+        }
+        rtAdapter.btnClickListener = object : RoutineAdapter.OnBtnClickListener{
             override fun OnBtnClick(data: RoutineData) {
-                var rtdata = Bundle()
-                rtdata.putInt("id",data.id)
-                rtdata.putInt("clicked",1)
-                setFragmentResult("rtdata", rtdata)
-                parentFragmentManager.beginTransaction().replace(R.id.container,RoutineWriteFragment()).commit()
+                var rtdata = rtDBHelper.findRoutine(data.id)
+                rtdata.enabled != rtdata.enabled
+                rtDBHelper.updateRoutine(rtdata)
             }
         }
+
         rtRecyclerView.adapter = rtAdapter
     }
 
