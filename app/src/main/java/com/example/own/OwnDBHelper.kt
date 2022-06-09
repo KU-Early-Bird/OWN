@@ -302,8 +302,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     public fun getWorkoutOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
         val ownList = ArrayList<OwnListData>()
         val dateStr = converter.convertCalenderToStr(day)
-        val strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, " +
-                "${WORKOUT_SET}, ${WORKOUT_EMOJI_ID} " +
+        val strSql = "select $WORKOUT_DATE, $WORKOUT_IS_DONE,$WORKOUT_NAME,$WORKOUT_BODY_PART, $WORKOUT_SET, $WORKOUT_EMOJI_ID " +
                 "from $WORKOUT_TABLE_NAME " +
                 "where $WORKOUT_DATE = '$dateStr';"
 
@@ -313,12 +312,12 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         cursor.moveToFirst()
         if(cursor.count>0){
             do {
-                val calendar = converter.convertStrToCalender(cursor.getString(0))
-                val isDone = cursor.getString(1).toInt()==1
-                val name = cursor.getString(2)
-                val bodyPart = cursor.getString(3)
-                val set = cursor.getString(4).toInt()
-                val emoji= cursor.getString(5).toInt()
+                val calendar = converter.convertStrToCalender(cursor.getString(cursor.getColumnIndex(WORKOUT_DATE).toInt()))
+                val isDone = cursor.getString(cursor.getColumnIndex(WORKOUT_IS_DONE).toInt()).toInt()==1
+                val name = cursor.getString(cursor.getColumnIndex(WORKOUT_NAME).toInt())
+                val bodyPart = cursor.getString(cursor.getColumnIndex(WORKOUT_BODY_PART).toInt())
+                val set = cursor.getString(cursor.getColumnIndex(WORKOUT_SET).toInt()).toInt()
+                val emoji= cursor.getString(cursor.getColumnIndex(WORKOUT_EMOJI_ID).toInt()).toInt()
 
                 var ownListData = OwnListData(calendar,isDone,name,bodyPart,set,emoji)
                 ownList.add(ownListData)
@@ -391,6 +390,28 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
             Toast.makeText(context,"fail",Toast.LENGTH_SHORT).show()
 
         db.close()
+    }
+
+    public fun insertWorkout(workoutData: WorkoutData) : Boolean{
+        val values = ContentValues()
+        values.put(WORKOUT_DATE,workoutData.date)
+        values.put(WORKOUT_ASSESSMENT,workoutData.assessment)
+        values.put(WORKOUT_TYPE,workoutData.type)
+        values.put(WORKOUT_EMOJI_ID,workoutData.emojiID)
+        values.put(WORKOUT_DURATION,workoutData.duration)
+        values.put(WORKOUT_NAME,workoutData.workoutName)
+        values.put(WORKOUT_RESTTIME,workoutData.restTime)
+        values.put(WORKOUT_PARTTIME,workoutData.partTime)
+        values.put(WORKOUT_BODY_PART,workoutData.bodyPart)
+        values.put(WORKOUT_IS_DONE,workoutData.isDone)
+        values.put(WORKOUT_SET,workoutData.set)
+
+        val db = writableDatabase
+
+        // 오류나면 -1 반환,
+        val flag = db.insert(WORKOUT_TABLE_NAME, null, values)>0
+        db.close()
+        return flag
     }
 
 

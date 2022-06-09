@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import android.view.MenuItem
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
+import com.example.own.Workout.WorkoutData
 import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
 import com.example.own.databinding.FragmentCalenderBinding
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     var yolkNum =0
     var level=0
     lateinit var achieveTableData:AchieveTableData
-    val viewModel:AchieveDataViewModel by viewModels()
+//    val viewModel:AchieveDataViewModel by viewModels()
     var yolks = ArrayList<Int>()
     val levels = ArrayList<Int>()
     lateinit var yolkGridAdapter:YolkGridAdapter
@@ -46,8 +49,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         dbhelper= OwnDBHelper(this)
         database = dbhelper.writableDatabase
-//        viewModel.achieveData.observe(this,Observer{ initAchieve() })
+//        viewModel.achieveData.observe(this, Observer { initAchieve() })
+        initData()
         initLayout()
+    }
+
+    private fun initData(){
+        val workoutDataList = dbhelper.getRoutineWorkoutList(CalendarFragment().getTodayGregorian())
+//        val workoutDataList = ArrayList<WorkoutData>()
+//        workoutDataList.add(WorkoutData(1,"2022-06-10","Plank","CORE","null",3,3,"00:11",10,15,0,false,
+//            1,false))
+        for(workout in workoutDataList){
+            dbhelper.insertWorkout(workout)
+        }
     }
 
     private fun initLayout() {
@@ -79,8 +93,14 @@ class MainActivity : AppCompatActivity() {
             R.id.achieveIcon -> {
                 if(binding.drawerLayout.isDrawerOpen(binding.drawerNav))
                     binding.drawerLayout.closeDrawer(binding.drawerNav)
-                else
+                else{
+                    achieveTableData = dbhelper.readAchieve()
+                    ownwanDays = achieveTableData.ownwanDays
+                    Log.d("won",ownwanDays.toString())
+                    calcLevelAndYolk()
+                    initAchieveLayout()
                     binding.drawerLayout.openDrawer(binding.drawerNav)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -89,6 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initAchieve(){
         achieveTableData = dbhelper.readAchieve()
+//        viewModel.update(achieveTableData)
 
         if(achieveTableData.lastUpdateDate == null)
             dbhelper.updateAchieve(0,false)
@@ -113,9 +134,11 @@ class MainActivity : AppCompatActivity() {
     /* 성취 영역 구현 ---- 추후 깔끔하게 수정하기 */
     private fun initAchieveLayout(){
         ownwanDays = achieveTableData.ownwanDays
-        level = (ownwanDays/ YOLK_GRID_SIZE)
-        yolkNum = ownwanDays% YOLK_GRID_SIZE
+//        ownwanDays = viewModel.achieveData.value!!.ownwanDays
 
+        Log.d("wnn",ownwanDays.toString())
+
+        calcLevelAndYolk()
         printAchieveSection()
 
         initYolkArr()
@@ -129,7 +152,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun calcLevelAndYolk(){
+        level = (ownwanDays/ YOLK_GRID_SIZE)
+        yolkNum = ownwanDays% YOLK_GRID_SIZE
+    }
+
     private fun initLevelArr() {
+        levels.clear()
         for(i: Int in 0 until LEVEL_GRID_SIZE){
             if(i< LEVEL_GRID_SIZE -level% LEVEL_GRID_SIZE){
                 levels.add(0)
@@ -140,6 +169,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initYolkArr(){
+        yolks.clear()
         for(i: Int in 0 until YOLK_GRID_SIZE){
             if(i<yolkNum){
                 yolks.add(1)
@@ -158,6 +188,7 @@ class MainActivity : AppCompatActivity() {
         // 레벨
         val levelView = findViewById<TextView>(R.id.levelNum)
         levelView.text = "Lv.$level"
+        Log.d("lev",level.toString())
 
         (levelView.layoutParams as LinearLayout.LayoutParams).topMargin =
             pxToDp(100*(LEVEL_GRID_SIZE - level% LEVEL_GRID_SIZE).toFloat())
@@ -167,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         // 노른자 개수
         val yolkNumView = findViewById<TextView>(R.id.yolkNum)
         yolkNumView.text = "$yolkNum/$YOLK_GRID_SIZE"
+        Log.d("yolk",yolkNum.toString())
         // yolk grid에도 반영
     }
 
