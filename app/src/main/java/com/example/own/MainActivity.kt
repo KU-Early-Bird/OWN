@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
+import com.example.own.Workout.WorkoutData
 import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
 import java.util.*
@@ -44,19 +45,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         dbhelper= OwnDBHelper(this)
         database = dbhelper.writableDatabase
-//        viewModel.achieveData.observe(this, Observer { initAchieve() })
         initData()
         initLayout()
     }
 
     private fun initData(){
-        val workoutDataList = dbhelper.getRoutineWorkoutList(CalendarFragment().getTodayGregorian())
-//        val workoutDataList = ArrayList<WorkoutData>()
-//        workoutDataList.add(WorkoutData(1,"2022-06-10","Plank","CORE","null",3,3,"00:11",10,15,0,false,
-//            1,false))
+        val today = CalendarFragment().getTodayGregorian()
+        val workoutDataList = dbhelper.getRoutineWorkoutList(today)
+        dbhelper.deleteWorkout(today)
+
         for(workout in workoutDataList){
             dbhelper.insertWorkout(workout)
         }
+        val workout =WorkoutData(1,"2022-06-10","Push up","ARM","hard...",3, 4 ,"00:30",10
+        ,10,1,true,1,false)
+        dbhelper.insertWorkout(workout)
     }
 
     private fun initLayout() {
@@ -104,7 +107,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initAchieve(){
         achieveTableData = dbhelper.readAchieve()
-//        viewModel.update(achieveTableData)
 
         if(achieveTableData.lastUpdateDate == null)
             dbhelper.updateAchieve(0,false)
@@ -112,7 +114,9 @@ class MainActivity : AppCompatActivity() {
             var yolkToAdd = 0
 
             // 운동한 날이라면 더해야할 yolk 개수 1 증가
-            while(achieveTableData.lastUpdateDate!! < CalendarFragment().getTodayGregorian()){
+            val today = CalendarFragment().getTodayGregorian()
+            while(achieveTableData.lastUpdateDate!! < today){
+//                val workoutList =
 //                if() // 운동데이터에 이 날짜로 검색해서 운동한 날 이면 (complete 된 운동 개수가 1이상이면)
                 yolkToAdd++
                 achieveTableData.lastUpdateDate!!.roll(GregorianCalendar.DAY_OF_MONTH,1)
@@ -129,10 +133,6 @@ class MainActivity : AppCompatActivity() {
     /* 성취 영역 구현 ---- 추후 깔끔하게 수정하기 */
     private fun initAchieveLayout(){
         ownwanDays = achieveTableData.ownwanDays
-//        ownwanDays = viewModel.achieveData.value!!.ownwanDays
-
-        Log.d("wnn",ownwanDays.toString())
-
         calcLevelAndYolk()
         printAchieveSection()
 
