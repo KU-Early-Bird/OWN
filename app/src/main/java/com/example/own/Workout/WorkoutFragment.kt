@@ -68,11 +68,11 @@ class WorkoutFragment : Fragment() {
     }
 
     private fun initWorkoutData() {
-        workoutList.add(WorkoutData(todayDateInString, "Plank","abdominal","",2,5,"",0,false, true))
-        workoutList.add(WorkoutData(todayDateInString, "Deadlifts","legs","",1,3,"",0,true, false))
-        workoutList.add(WorkoutData(todayDateInString, "Calve raises","legs","",1,8,"",0,true, true))
-        workoutList.add(WorkoutData(todayDateInString, "Chest dips","chest","",1,2,"",0,true, true))
-        workoutList.add(WorkoutData(todayDateInString, "Pushdowns","chest","",1,100,"",0,false, true))
+        workoutList.add(WorkoutData(1,todayDateInString, "Plank","abdominal","",2,5,"",0,0,0,false, 0,false))
+        workoutList.add(WorkoutData(2,todayDateInString, "Deadlifts","legs","",1,3,"",0,0,0,true, 0,false))
+        workoutList.add(WorkoutData(3,todayDateInString, "Calve raises","legs","",1,8,"",0,0,0,true, 0,false))
+        workoutList.add(WorkoutData(4,todayDateInString, "Chest dips","chest","",1,2,"",0,0,0,true, 0,false))
+        workoutList.add(WorkoutData(5,todayDateInString, "Pushdowns","chest","",1,100,"",0,0,0,false, 0,false))
     }
 
     private fun initTimer() {

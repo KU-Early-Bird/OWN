@@ -28,17 +28,17 @@ class DiaryWriteFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //dataget
-        setFragmentResultListener("DiaryWrite") { key, bundle ->
-            newdiarydatadate = bundle.getString("date").toString()
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //dataget
+        setFragmentResultListener("DiaryWrite") { key, bundle ->
+            newdiarydatadate = bundle.getString("date").toString()
+        }
+
         binding = FragmentDiaryWriteBinding.inflate(inflater, container, false)
 
 
@@ -107,6 +107,7 @@ class DiaryWriteFragment: Fragment() {
 
 
             val newdiarydata = DiaryData(newdiarydatadate, newdiarydatacontent, newdiarydataimage)
+            parentFragmentManager.popBackStack()
             var result = (activity as MainActivity).dbhelper.insertDiaryData(newdiarydata)
         }
 

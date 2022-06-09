@@ -8,15 +8,17 @@ import android.view.MenuItem
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.own.DB.OwnDBHelper
 import com.example.own.Diary.DiaryTabFragment
 import com.example.own.Diary.DiaryWriteFragment
 import com.example.own.Home.AchieveTableData
-import com.example.own.Home.CalendarFragment
 import com.example.own.Home.LevelGridAdapter
 import com.example.own.Home.YolkGridAdapter
 import com.example.own.Workout.WorkoutFragment
 import com.example.own.databinding.ActivityMainBinding
+import com.example.own.databinding.FragmentCalenderBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     var yolkNum =0
     var level=0
     lateinit var achieveTableData: AchieveTableData
+    val viewModel:AchieveDataViewModel by viewModels()
     var yolks = ArrayList<Int>()
     val levels = ArrayList<Int>()
     lateinit var yolkGridAdapter: YolkGridAdapter
@@ -51,14 +54,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initLayout() {
+        supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
         // 하단바 리스너
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.tab_home-> supportFragmentManager.beginTransaction().replace(R.id.container, CalendarFragment()).commit()
-                R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment()).commit()
+                R.id.tab_diary->supportFragmentManager.beginTransaction().replace(R.id.container,DiaryTabFragment(),"DiaryTab").commit()
                 R.id.tab_routine-> supportFragmentManager.beginTransaction().replace(R.id.container,DiaryWriteFragment()).commit()
                 R.id.tab_workout-> supportFragmentManager.beginTransaction().replace(R.id.container, WorkoutFragment()).commit()
             }
+
+            this.supportFragmentManager.popBackStackImmediate()
             true
         }
         initAchieve()
