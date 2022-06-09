@@ -44,7 +44,7 @@ class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val dateStr = Converter().convertStrToCalender(diaryData.Diary_Date)
         val workoutList = ownDBHelper.getWorkoutList(dateStr)
-        adapter = DiaryDlgAdapter(workoutList) // 하지라님 데이터로 바꾸기
+        adapter = DiaryDlgAdapter(workoutList)
 
 
         // 이미지 소스로 이미지 보여주기

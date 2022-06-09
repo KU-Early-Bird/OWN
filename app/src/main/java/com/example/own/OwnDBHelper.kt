@@ -143,10 +143,10 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         if (cursor.count ==0)
             return AchieveTableData(null,0,false )
 
-//        Toast.makeText(context, cursor.count.toString(), Toast.LENGTH_LONG).show()
         val lateUpdate=converter.convertStrToCalender(cursor.getString(0))
         val ownwanDays = cursor.getString(1).toInt()
         val didComplete = getDidComplete(cursor.getString(2).toInt())
+        Toast.makeText(context, cursor.getString(0), Toast.LENGTH_LONG).show()
 
 
         val achieveData = AchieveTableData(lateUpdate, ownwanDays, didComplete)
@@ -165,6 +165,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     public fun insertRecord(ownwanDays:Int,didComplete:Int) : Boolean{
         val values = ContentValues()
 
+        values.put(LAST_UPDATE,converter.convertCalenderToStr(CalendarFragment().getTodayGregorian()))
         values.put(OWNWAN_DAYS,ownwanDays) // ownwanDays
         values.put(DID_COMPLETE,didComplete)
 
@@ -348,7 +349,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         if(cursor.count>0){
             do {
                 val isDone = cursor.getString(cursor.getColumnIndex(WORKOUT_IS_DONE).toInt()).toInt()==1
-                if(!isDone){
+                if(isDone){
                     val name = cursor.getString(cursor.getColumnIndex(WORKOUT_NAME).toInt())
                     val bodyPart = cursor.getString(cursor.getColumnIndex(WORKOUT_BODY_PART).toInt())
                     val set = cursor.getString(cursor.getColumnIndex(WORKOUT_SET).toInt()).toInt()
