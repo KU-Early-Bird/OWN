@@ -1,5 +1,6 @@
 package com.example.own
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.own.Diary.DiaryData
+import com.example.own.Workout.WorkoutData
 import com.example.own.databinding.DiaryDialogBinding
 import java.io.File
 
@@ -16,6 +18,7 @@ import java.io.File
 class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
     lateinit var binding:DiaryDialogBinding
     lateinit var adapter: DiaryDlgAdapter
+    lateinit var ownDBHelper:OwnDBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,15 @@ class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
         return binding.root!!
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        ownDBHelper = OwnDBHelper(context)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = DiaryDlgAdapter(ArrayList<OwnListData>()) // 하지라님 데이터로 바꾸기
+
+        adapter = DiaryDlgAdapter(ArrayList<WorkoutData>()) // 하지라님 데이터로 바꾸기
 
         binding.apply {
             // 이미지 소스로 이미지 보여주기
