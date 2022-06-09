@@ -13,13 +13,12 @@ import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.own.MainActivity
-import com.example.own.OwnDBHelper
 import com.example.own.R
 import com.example.own.databinding.FragmentRoutineBinding
 
 class RoutineFragment : Fragment(){
     lateinit var binding: FragmentRoutineBinding
-    lateinit var rtDBHelper: OwnDBHelper
+    var rtDBHelper = (activity as MainActivity).dbhelper
     lateinit var rtRecyclerView: RecyclerView
     lateinit var rtAdapter: RoutineAdapter
     var rtData:ArrayList<RoutineData> = ArrayList()
@@ -43,7 +42,6 @@ class RoutineFragment : Fragment(){
     }
 
     private fun initDB(){
-        rtDBHelper = (activity as MainActivity).dbhelper
         rtData = rtDBHelper.getAllRoutine()
     }
 
