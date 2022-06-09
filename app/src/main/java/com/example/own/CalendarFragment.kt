@@ -23,12 +23,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class CalendarFragment : Fragment() {
-    // const
-    companion object{
-        const val YOLK_GRID_SIZE = 30
-        const val LEVEL_GRID_SIZE = 10
-    }
 
+    lateinit var achieveTableData:AchieveTableData
     // calendar
     var today:GregorianCalendar?=null
     var clickedDate:GregorianCalendar?=null
@@ -43,14 +39,6 @@ class CalendarFragment : Fragment() {
 
     // achieve members
     var binding:FragmentCalenderBinding ?=null
-    var ownwanDays = 155
-    var yolkNum =0
-    var level=0
-    lateinit var achieveTableData:AchieveTableData
-    var yolks = ArrayList<Int>()
-    val levels = ArrayList<Int>()
-    lateinit var yolkGridAdapter:YolkGridAdapter
-    lateinit var levelGridAdapter:LevelGridAdapter
     lateinit var ownDBHelper : OwnDBHelper // 성취 DB Helper
 
     override fun onCreateView(
@@ -79,24 +67,7 @@ class CalendarFragment : Fragment() {
     private fun initDB() {
         // achieve data
         ownDBHelper = OwnDBHelper(activity as MainActivity)
-        achieveTableData = (activity as MainActivity).dbhelper.readAchieve()
-
-        if(achieveTableData.lastUpdateDate == null)
-            ownDBHelper.updateAchieve(0,false)
-        else{
-            var yolkToAdd = 0
-
-            // 운동한 날이라면 더해야할 yolk 개수 1 증가
-            while(achieveTableData.lastUpdateDate!! < today){
-//                if() // 운동데이터에 이 날짜로 검색해서 운동한 날 이면 (complete 된 운동 개수가 1이상이면)
-                yolkToAdd++
-                achieveTableData.lastUpdateDate!!.roll(GregorianCalendar.DAY_OF_MONTH,1)
-            }
-
-            // achieve 데이터 업데이트
-            ownDBHelper.updateAchieve(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
-            achieveTableData = ownDBHelper.readAchieve()
-        }
+        achieveTableData = ownDBHelper.readAchieve()
 
 
         // 오늘 날짜 ownList 가져오기
@@ -111,9 +82,6 @@ class CalendarFragment : Fragment() {
 
 
     private fun initLayer() {
-
-        // achieve 영역 초기화
-        initAchieveSection()
 
         // ownList adapter 초기화
         initOwnList()
@@ -159,7 +127,7 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    private fun getTodayGregorian():GregorianCalendar{
+    public fun getTodayGregorian():GregorianCalendar{
         val today = Calendar.getInstance()
         return GregorianCalendar(today.get(Calendar.YEAR),today.get(Calendar.MONTH),today.get(Calendar.DAY_OF_MONTH) )
     }
@@ -288,70 +256,7 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    /* 성취 영역 구현 ---- 추후 깔끔하게 수정하기 */
-    private fun initAchieveSection(){
-        ownwanDays = achieveTableData.ownwanDays
-        level = (ownwanDays/ YOLK_GRID_SIZE)
-        yolkNum = ownwanDays% YOLK_GRID_SIZE
 
-        printAchieveSection()
-
-        initYolkArr()
-        initLevelArr()
-
-        yolkGridAdapter = YolkGridAdapter(activity,yolks)
-        binding!!.drawerNav.findViewById<GridView>(R.id.yolkGrid).adapter = yolkGridAdapter
-
-        levelGridAdapter = LevelGridAdapter(activity,levels)
-        binding!!.drawerNav.findViewById<GridView>(R.id.levelGrid).adapter = levelGridAdapter
-
-    }
-
-    private fun initLevelArr() {
-        for(i: Int in 0 until LEVEL_GRID_SIZE){
-            if(i< LEVEL_GRID_SIZE -level% LEVEL_GRID_SIZE){
-                levels.add(0)
-            }else{
-                levels.add(1)
-            }
-        }
-    }
-
-    private fun initYolkArr(){
-        for(i: Int in 0 until YOLK_GRID_SIZE){
-            if(i<yolkNum){
-                yolks.add(1)
-            }else{
-                yolks.add(0)
-            }
-        }
-    }
-
-    // achieve 화면 출력 함수 - 함수명 바꿀 것 (텍스트 내용만 변경함)
-    private fun printAchieveSection(){
-        // 오늘 운동한 날짜
-        val dayCnt = mainActivity.findViewById<TextView>(R.id.dayCnt)
-        dayCnt.text = ownwanDays.toString()
-
-        // 레벨
-        val levelView = mainActivity.findViewById<TextView>(R.id.levelNum)
-        levelView.text = "Lv.$level"
-
-        (levelView.layoutParams as LinearLayout.LayoutParams).topMargin =
-            pxToDp(100*(LEVEL_GRID_SIZE - level% LEVEL_GRID_SIZE).toFloat())
-
-        // level grid에도 반영
-
-        // 노른자 개수
-        val yolkNumView = mainActivity.findViewById<TextView>(R.id.yolkNum)
-        yolkNumView.text = "$yolkNum/$YOLK_GRID_SIZE"
-        // yolk grid에도 반영
-    }
-
-    private fun pxToDp(pixel: Float):Int{
-        val density = resources.displayMetrics.density
-        return ( pixel/ density).toInt()
-    }
 
     override fun onDestroy() {
         super.onDestroy()
