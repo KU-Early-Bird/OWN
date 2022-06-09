@@ -94,9 +94,9 @@ class MainActivity : AppCompatActivity() {
                 else{
                     achieveTableData = dbhelper.readAchieve()
                     ownwanDays = achieveTableData.ownwanDays
-                    Log.d("won",ownwanDays.toString())
                     calcLevelAndYolk()
                     initAchieveLayout()
+                   
                     binding.drawerLayout.openDrawer(binding.drawerNav)
                 }
                 true
@@ -115,16 +115,29 @@ class MainActivity : AppCompatActivity() {
 
             // 운동한 날이라면 더해야할 yolk 개수 1 증가
             val today = CalendarFragment().getTodayGregorian()
-            while(achieveTableData.lastUpdateDate!! < today){
-//                val workoutList =
-//                if() // 운동데이터에 이 날짜로 검색해서 운동한 날 이면 (complete 된 운동 개수가 1이상이면)
-                yolkToAdd++
-                achieveTableData.lastUpdateDate!!.roll(GregorianCalendar.DAY_OF_MONTH,1)
+            Log.d("today",today.toString())
+            Log.d("lastUpdate",achieveTableData.lastUpdateDate.toString())
+            val date = achieveTableData.lastUpdateDate
+            while(date!! < today){
+                val workoutList = dbhelper.getWorkoutList(date)
+                var didWorkout=false
+                for(workout in workoutList){
+                    if(workout.isDone){
+                        didWorkout=true
+                        break
+                    }
+                }
+                if(didWorkout) // 운동데이터에 이 날짜로 검색해서 운동한 날 이면 (complete 된 운동 개수가 1이상이면)
+                    yolkToAdd++
+                date!!.add(GregorianCalendar.DAY_OF_MONTH,1)
             }
 
             // achieve 데이터 업데이트
             dbhelper.updateAchieve(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
             achieveTableData = dbhelper.readAchieve()
+
+
+
         }
 
         initAchieveLayout()
