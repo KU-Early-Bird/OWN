@@ -1,5 +1,6 @@
 package com.example.own.Routine
 
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
@@ -8,16 +9,22 @@ import com.example.own.databinding.RoutineRowBinding
 class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<RoutineAdapter.ViewHolder>() {
 
     interface OnItemClickListener{
-        fun OnItemClick(data:RoutineData)
+        fun OnTextClick(data:RoutineData)
+        fun OnBtnClick(data:RoutineData)
     }
 
-    var itemClickListener:OnItemClickListener?=null
+    var textClickListener:OnItemClickListener?=null
+    var btnClickListener:OnItemClickListener?=null
 
     inner class ViewHolder(val binding: RoutineRowBinding) : RecyclerView.ViewHolder(binding.root){
-        val text = binding.relativelayout
+        val text = binding.background
+        val enabled = binding.enabled
         init {
             text.setOnClickListener{
-                itemClickListener?.OnItemClick(items[adapterPosition])
+                textClickListener?.OnTextClick(items[adapterPosition])
+            }
+            enabled.setOnClickListener {
+                btnClickListener?.OnBtnClick(items[adapterPosition])
             }
         }
     }
@@ -28,6 +35,7 @@ class RoutineAdapter(val items:ArrayList<RoutineData>) : RecyclerView.Adapter<Ro
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("routine",items[position].toString())
         holder.binding.id.text = items[position].id.toString()
         holder.binding.name.text = items[position].name
         holder.binding.bodyPart.text = items[position].bodyPart
