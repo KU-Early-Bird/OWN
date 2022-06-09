@@ -36,6 +36,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val WORKOUT_TABLE_NAME = "WORKOUT"
         val WORKOUT_DATE = "DATE"
         val WORKOUT_ASSESSMENT = "ASSESSMENT"
+        val WORKOUT_TYPE = "TYPE"
         val WORKOUT_EMOJI_ID = "EMOJI_ID"
         val WORKOUT_DURATION = "DURATION"
         val WORKOUT_NAME ="NAME"
@@ -94,6 +95,7 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
                 "$WORKOUT_NAME text,"+
                 "$WORKOUT_BODY_PART text,"+
                 "$WORKOUT_ASSESSMENT text," +
+                "$WORKOUT_TYPE tinyint, "
                 "$WORKOUT_SET integer," +
                 "$WORKOUT_RESTTIME int, "+
                 "$WORKOUT_PARTTIME int, "+
