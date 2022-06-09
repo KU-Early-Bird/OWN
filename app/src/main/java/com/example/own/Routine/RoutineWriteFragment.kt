@@ -23,11 +23,8 @@ class RoutineWriteFragment : Fragment() {
         super.onCreate(savedInstanceState)
         rtDBHelper = (activity as MainActivity).dbhelper
         setFragmentResultListener("rtdata"){requestKey, bundle ->
-            rtbundle = bundle
             rtData.id = bundle.getInt("id")
-            var clicked = bundle.getInt("clicked")
             rtData = rtDBHelper.findRoutine(rtData.id)
-
         }
     }
 
