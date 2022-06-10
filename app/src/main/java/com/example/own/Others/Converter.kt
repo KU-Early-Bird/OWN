@@ -33,7 +33,7 @@ class Converter {
 
     fun convertStrToCalender(dateStr:String):GregorianCalendar{
         var dateList = dateStr.split('-')
-        return GregorianCalendar(dateList[0].toInt(), dateList[1].toInt(),dateList[2].toInt())
+        return GregorianCalendar(dateList[0].toInt(), dateList[1].toInt()-1,dateList[2].toInt())
     }
 
     fun convertCalenderToStr(calendar:GregorianCalendar):String{

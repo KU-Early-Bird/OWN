@@ -1,5 +1,6 @@
 package com.example.own.Diary
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.own.Home.OwnListData
+import com.example.own.DB.OwnDBHelper
+import com.example.own.Others.Converter
 import com.example.own.databinding.DiaryDialogBinding
 import java.io.File
 
@@ -16,6 +18,7 @@ import java.io.File
 class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
     lateinit var binding:DiaryDialogBinding
     lateinit var adapter: DiaryDlgAdapter
+    lateinit var ownDBHelper: OwnDBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,30 +34,35 @@ class DiaryDialog(var diaryData: DiaryData) : DialogFragment() {
         return binding.root!!
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        ownDBHelper = OwnDBHelper(context)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = DiaryDlgAdapter(ArrayList<OwnListData>()) // 하지라님 데이터로 바꾸기
+        val dateStr = Converter().convertStrToCalender(diaryData.Diary_Date)
+        val workoutList = ownDBHelper.getWorkoutList(dateStr)
+        adapter = DiaryDlgAdapter(workoutList)
 
-        binding.apply {
-            // 이미지 소스로 이미지 보여주기
-            var imagePath=diaryData.Diary_Image
-            if (File(imagePath).exists()) {
-                var bitmap = BitmapFactory.decodeFile(imagePath)
-                binding.diaryDlgImg.setImageBitmap(bitmap)
-            }
 
-            // 일기 내용
-            diaryDlgtext.text = diaryData.Diary_Content
+        // 이미지 소스로 이미지 보여주기
+        var imagePath=diaryData.Diary_Image
+        if (File(imagePath).exists()) {
+            var bitmap = BitmapFactory.decodeFile(imagePath)
+            binding.diaryDlgImg.setImageBitmap(bitmap)
+        }
 
-            // recycler view
-            diaryDlgRecycler.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
-            diaryDlgRecycler.adapter = adapter
+        // 일기 내용
+        binding.diaryDlgtext.text = diaryData.Diary_Content
 
-            //
-            diaryDlgDismissBtn.setOnClickListener {
-                dismiss()
-            }
+        // recycler view
+        binding.diaryDlgRecycler.layoutManager = LinearLayoutManager(activity ,LinearLayoutManager.VERTICAL,false)
+        binding.diaryDlgRecycler.adapter = adapter
 
+        //
+        binding.diaryDlgDismissBtn.setOnClickListener {
+            dismiss()
         }
 
 
