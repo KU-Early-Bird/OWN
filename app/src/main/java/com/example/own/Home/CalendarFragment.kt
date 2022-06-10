@@ -58,6 +58,7 @@ class CalendarFragment : Fragment() {
         mainActivity = context as MainActivity
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         today = getTodayGregorian()
@@ -162,13 +163,12 @@ class CalendarFragment : Fragment() {
             }
             // 미래
             else if(clickedDate!!.compareTo(today)>0){
+                ownList = ownDBHelper.getRoutineOwnList(clickedDate!!)
                 // 운동 완료 & 기록 작성 버튼 안보이도록
                 binding!!.apply {
                     writeDiary.visibility = View.GONE
                     completeWorkout.visibility =View.GONE
                 }
-
-                Toast.makeText(activity,"미래", Toast.LENGTH_SHORT).show()
 
             }
             // 현재
@@ -204,6 +204,7 @@ class CalendarFragment : Fragment() {
                 ownDBHelper.updateAchieve(achieveTableData.ownwanDays, true)
                 achieveTableData = ownDBHelper.readAchieve()
                 initTodayLayout()
+                activity?.recreate()
             }
 
             writeDiary.setOnClickListener{
@@ -212,6 +213,7 @@ class CalendarFragment : Fragment() {
                 var bundle = Bundle()
                 bundle.putString("date", date)
                 setFragmentResult("DiaryWrite", bundle)
+                writeDiary.visibility=View.GONE
 
                 parentFragmentManager.beginTransaction().apply{
                     replace(R.id.container, DiaryWriteFragment())

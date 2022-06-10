@@ -38,6 +38,9 @@ class OwnListAdapter(var items:ArrayList<OwnListData>, val today: GregorianCalen
             // emoji
             if(items[pos].isDone){
                 when(items[pos].emoji){
+//                    0-> {
+//                        ownListEmoji.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_24)
+//                    }
                     1-> {
                         ownListEmoji.setImageResource(R.drawable.icon_emoji1_background)
                         ownListEmoji.setColorFilter(Color.GREEN)
@@ -58,6 +61,7 @@ class OwnListAdapter(var items:ArrayList<OwnListData>, val today: GregorianCalen
                 ownListItem.setBackgroundResource(R.color.own_skyblue_defaultBack)
                 ownListBodyPart.setBackgroundResource(R.color.own_yellow)
                 ownListSet.setBackgroundResource(R.color.own_yellow)
+                ownListEmoji.setColorFilter(Color.BLACK)
                 ownListEmoji.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_24)
             }
             ownListWorkoutName.text = items[pos].name

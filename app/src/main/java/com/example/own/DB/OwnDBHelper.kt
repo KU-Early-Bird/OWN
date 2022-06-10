@@ -149,7 +149,6 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val lateUpdate=converter.convertStrToCalender(cursor.getString(0))
         val ownwanDays = cursor.getString(1).toInt()
         val didComplete = getDidComplete(cursor.getString(2).toInt())
-        Toast.makeText(context, cursor.getString(0), Toast.LENGTH_LONG).show()
 
 
         val achieveData = AchieveTableData(lateUpdate, ownwanDays, didComplete)
@@ -375,58 +374,6 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
     }
 
 
-    public fun getRoutineWorkoutList(day: GregorianCalendar):ArrayList<WorkoutData>{
-        val workoutList = ArrayList<WorkoutData>()
-        var strSql = "select *  from $ROUTINE_TABLE_NAME"
-        val db = readableDatabase
-        val cursor = db.rawQuery(strSql, null)
-
-        cursor.moveToFirst()
-        if(cursor.count>0){
-            do {
-                val enabled=cursor.getString(0).toInt()==1
-                if(!enabled) continue
-
-                val isDay = cursor.getString(1).toInt()==1
-                if(!isDay)continue
-
-                val weekRoutine = converter.convertWeekRoutineToBitset(cursor.getString(1).toInt())
-                weekRoutine.and(converter.convertDayOfWeekToBitSet(day))
-                var flag = false
-                for(i in 0 until 7){
-                    if(weekRoutine[i]){
-                        flag=true
-                        break
-                    }
-                }
-
-                if(!flag) continue
-
-
-                val id = cursor.getString(cursor.getColumnIndex(ID).toInt()).toInt()
-                val name = cursor.getString(cursor.getColumnIndex(NAME).toInt())
-                val bodyPart = cursor.getString(cursor.getColumnIndex(BODYPART).toInt())
-                val set = cursor.getString(cursor.getColumnIndex(SETNUM).toInt()).toInt()
-                val count = cursor.getString(cursor.getColumnIndex(TIME).toInt()).toInt()
-                val restTime = cursor.getString(cursor.getColumnIndex(RESTTIME).toInt()).toInt()
-                val partTime = cursor.getString(cursor.getColumnIndex(PARTTIME).toInt()).toInt()
-                val type = cursor.getString(cursor.getColumnIndex(TYPE).toInt()).toInt()
-                val isSoundOn=cursor.getString(cursor.getColumnIndex(SOUND).toInt()).toInt()==1
-                val dateStr= converter.convertCalenderToStr(day)
-
-                var workoutData=WorkoutData(id =id,date = dateStr,workoutName = name,
-                    bodyPart=bodyPart, assessment = "",count=count,restTime=restTime,partTime=partTime ,
-                    set=set,duration="", emojiID = 0, isDone = false, type = type, isSoundOn=isSoundOn )
-                workoutList.add(workoutData)
-            }while(cursor.moveToNext())
-        }
-
-        cursor.close()
-        db.close()
-
-        return workoutList
-      }
-
     public fun deleteWorkout(calendar: GregorianCalendar){
         val dateStr = converter.convertCalenderToStr(calendar)
         val strSql = "delete from $WORKOUT_TABLE_NAME where $WORKOUT_DATE = $dateStr;"
@@ -458,8 +405,6 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         db.close()
         return flag
     }
-
-
 
     ////////////// Routine
     fun getAllRoutine(): ArrayList<RoutineData> {
@@ -503,6 +448,120 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         return rtData
     }
 
+
+
+    public fun getRoutineWorkoutList(day: GregorianCalendar):ArrayList<WorkoutData>{
+        val workoutList = ArrayList<WorkoutData>()
+        var strSql = "select *  from $ROUTINE_TABLE_NAME"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strSql, null)
+
+
+        Log.d("test",converter.convertWeekRoutineToBitset(7).toString())
+
+        cursor.moveToFirst()
+        if(cursor.count>0){
+            do {
+                val enabled=cursor.getString(cursor.getColumnIndex(ENABLED).toInt()).toInt()==1
+                Log.d("enabled",enabled.toString())
+                if(!enabled) continue
+
+                val weekRoutine = converter.convertWeekRoutineToBitset(cursor.getString(cursor.getColumnIndex(
+                    DAYOFWEEK).toInt()).toInt())
+                Log.d("week111",weekRoutine.toString())
+                weekRoutine.and(converter.convertDayOfWeekToBitSet(day))
+                Log.d("week111",weekRoutine.toString())
+                var flag = false
+                for(i in 0 until 7){
+                    if(weekRoutine[i]){
+                        flag=true
+                        break
+                    }
+                }
+
+
+                val isDay = cursor.getString(cursor.getColumnIndex(ISDAY).toInt()).toInt()==1
+                if(!flag && !isDay) continue
+
+                val id = cursor.getString(cursor.getColumnIndex(ID).toInt()).toInt()
+                val name = cursor.getString(cursor.getColumnIndex(NAME).toInt())
+                val bodyPart = cursor.getString(cursor.getColumnIndex(BODYPART).toInt())
+                val set = cursor.getString(cursor.getColumnIndex(SETNUM).toInt()).toInt()
+                val count = cursor.getString(cursor.getColumnIndex(TIME).toInt()).toInt()
+                val restTime = cursor.getString(cursor.getColumnIndex(RESTTIME).toInt()).toInt()
+                val partTime = cursor.getString(cursor.getColumnIndex(PARTTIME).toInt()).toInt()
+                val type = cursor.getString(cursor.getColumnIndex(TYPE).toInt()).toInt()
+                val isSoundOn=cursor.getString(cursor.getColumnIndex(SOUND).toInt()).toInt()==1
+                val dateStr= converter.convertCalenderToStr(day)
+
+                var workoutData=WorkoutData(id =id,date = dateStr,workoutName = name,
+                    bodyPart=bodyPart, assessment = "",count=count,restTime=restTime,partTime=partTime ,
+                    set=set,duration="", emojiID = 0, isDone = false, type = type, isSoundOn=isSoundOn )
+                workoutList.add(workoutData)
+            }while(cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return workoutList
+    }
+
+    public fun getRoutineOwnList(day: GregorianCalendar):ArrayList<OwnListData>{
+        val ownList = ArrayList<OwnListData>()
+        var strSql = "select *  from $ROUTINE_TABLE_NAME"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strSql, null)
+
+
+        Log.d("test",converter.convertWeekRoutineToBitset(7).toString())
+
+        cursor.moveToFirst()
+        if(cursor.count>0){
+            do {
+                val enabled=cursor.getString(cursor.getColumnIndex(ENABLED).toInt()).toInt()==1
+                Log.d("enabled",enabled.toString())
+                if(!enabled) continue
+
+                val weekRoutine = converter.convertWeekRoutineToBitset(cursor.getString(cursor.getColumnIndex(
+                    DAYOFWEEK).toInt()).toInt())
+//                Log.d("week111",weekRoutine.toString())
+//                weekRoutine.and(converter.convertDayOfWeekToBitSet(day))
+//                Log.d("week111",weekRoutine.toString())
+                var flag = false
+                for(i in 0 until 7){
+                    if(weekRoutine[i]){
+                        flag=true
+                        break
+                    }
+                }
+
+
+                val isDay = cursor.getString(cursor.getColumnIndex(ISDAY).toInt()).toInt()==1
+                if(!flag && !isDay) continue
+
+                val id = cursor.getString(cursor.getColumnIndex(ID).toInt()).toInt()
+                val name = cursor.getString(cursor.getColumnIndex(NAME).toInt())
+                val bodyPart = cursor.getString(cursor.getColumnIndex(BODYPART).toInt())
+                val set = cursor.getString(cursor.getColumnIndex(SETNUM).toInt()).toInt()
+                val count = cursor.getString(cursor.getColumnIndex(TIME).toInt()).toInt()
+                val restTime = cursor.getString(cursor.getColumnIndex(RESTTIME).toInt()).toInt()
+                val partTime = cursor.getString(cursor.getColumnIndex(PARTTIME).toInt()).toInt()
+                val type = cursor.getString(cursor.getColumnIndex(TYPE).toInt()).toInt()
+                val isSoundOn=cursor.getString(cursor.getColumnIndex(SOUND).toInt()).toInt()==1
+                val dateStr= converter.convertCalenderToStr(day)
+
+                val ownData = OwnListData(day, isDone = false,name, bodyPart,set,emoji = 0)
+                ownList.add(ownData)
+            }while(cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return ownList
+    }
+
     fun findRoutine(id:Int): RoutineData {
         var rtData = RoutineData()
         rtData.id = id
@@ -510,21 +569,23 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         cursor.moveToFirst()
-        rtData.name = cursor.getString(cursor.getColumnIndex("name").toString().toInt())
-        rtData.bodyPart = cursor.getString(cursor.getColumnIndex("bodypart").toString().toInt())
-        rtData.setNum = cursor.getString(cursor.getColumnIndex("setnum").toString().toInt()).toInt()
-        rtData.time = cursor.getString(cursor.getColumnIndex("time").toString().toInt()).toInt()
-        rtData.restTime = cursor.getString(cursor.getColumnIndex("resttime").toString().toInt()).toInt()
-        rtData.partTime = cursor.getString(cursor.getColumnIndex("parttime").toString().toInt()).toInt()
-        rtData.type = cursor.getString(cursor.getColumnIndex("type").toString().toInt()).toInt() == 0
-        rtData.sound = cursor.getString(cursor.getColumnIndex("sound").toString().toInt()).toInt() == 0
-        rtData.isDay = cursor.getString(cursor.getColumnIndex("isday").toString().toInt()).toInt() == 0
-        var dayofweek = cursor.getString(cursor.getColumnIndex("dayofweek").toString().toInt()).toInt()
-        for(j in 6 downTo 0) {
-            rtData.dayOfWeek[j] = dayofweek % 2 == 0
-            dayofweek = dayofweek / 2
+        if(cursor.count>0){
+            rtData.name = cursor.getString(cursor.getColumnIndex("name").toString().toInt())
+            rtData.bodyPart = cursor.getString(cursor.getColumnIndex("bodypart").toString().toInt())
+            rtData.setNum = cursor.getString(cursor.getColumnIndex("setnum").toString().toInt()).toInt()
+            rtData.time = cursor.getString(cursor.getColumnIndex("time").toString().toInt()).toInt()
+            rtData.restTime = cursor.getString(cursor.getColumnIndex("resttime").toString().toInt()).toInt()
+            rtData.partTime = cursor.getString(cursor.getColumnIndex("parttime").toString().toInt()).toInt()
+            rtData.type = cursor.getString(cursor.getColumnIndex("type").toString().toInt()).toInt() == 0
+            rtData.sound = cursor.getString(cursor.getColumnIndex("sound").toString().toInt()).toInt() == 0
+            rtData.isDay = cursor.getString(cursor.getColumnIndex("isday").toString().toInt()).toInt() == 0
+            var dayofweek = cursor.getString(cursor.getColumnIndex("dayofweek").toString().toInt()).toInt()
+            for(j in 6 downTo 0) {
+                rtData.dayOfWeek[j] = dayofweek % 2 == 0
+                dayofweek = dayofweek / 2
+            }
+            rtData.enabled = cursor.getString(cursor.getColumnIndex("enabled").toString().toInt()).toInt() == 0
         }
-        rtData.enabled = cursor.getString(cursor.getColumnIndex("enabled").toString().toInt()).toInt() == 0
         cursor.close()
         db.close()
         return rtData

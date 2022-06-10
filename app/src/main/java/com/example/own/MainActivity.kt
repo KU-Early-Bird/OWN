@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import android.database.sqlite.SQLiteDatabase
+import android.os.Debug
 import android.util.Log
 import android.view.MenuItem
 import android.widget.GridView
@@ -60,13 +61,38 @@ class MainActivity : AppCompatActivity() {
         val today = CalendarFragment().getTodayGregorian()
         val workoutDataList = dbhelper.getRoutineWorkoutList(today)
         dbhelper.deleteWorkout(today)
-
+        Log.d("wokr",workoutDataList.toString())
         for(workout in workoutDataList){
             dbhelper.insertWorkout(workout)
         }
-        val workout =WorkoutData(1,"2022-06-10","Push up","ARM","hard...",3, 4 ,"00:30",10
-        ,10,1,true,1,false)
-        dbhelper.insertWorkout(workout)
+        val workoutList = ArrayList<WorkoutData>()
+        workoutList.add(WorkoutData(1,"2022-06-10","Bench Press","CHEST","_",5, 4 ,"00:30",10
+            ,10,0,false,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-10","Sited Row","BACK","_",3, 4 ,"00:30",10
+            ,10,0,false,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-10","Push up","ARM","hard...",2, 4 ,"00:30",10
+        ,10,1,true,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-10","Jump","CARDIO","It was good!",10, 4 ,"00:30",10
+            ,10,1,true,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-10","Sqaut","HIP","soso.",2, 4 ,"00:30",10
+            ,10,2,true,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-10","Pull down","ARM","hard...",5, 4 ,"00:30",10
+            ,10,3,true,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-11","Side kick","LEG","_",7, 4 ,"00:30",10
+            ,10,0,false,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-11","YOGA","MENTAL","peaceful",4, 4 ,"00:30",10
+            ,10,0,false,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-02","Push up","ARM","Feel good",6, 4 ,"00:30",10
+            ,10,0,false,1,false))
+        workoutList.add(WorkoutData(1,"2022-06-02","Jogging","CARDIO","hard...",1, 4 ,"00:30",10
+            ,10,3,true,1,false))
+
+//        dbhelper.updateAchieve(135,false)
+//
+
+        for (workout in workoutList){
+            dbhelper.insertWorkout(workout)
+        }
     }
 
     private fun initLayout() {
@@ -144,8 +170,6 @@ class MainActivity : AppCompatActivity() {
             // achieve 데이터 업데이트
             dbhelper.updateAchieve(achieveTableData.ownwanDays + yolkToAdd, achieveTableData.didWorkout)
             achieveTableData = dbhelper.readAchieve()
-
-
 
         }
 

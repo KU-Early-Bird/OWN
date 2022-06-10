@@ -21,7 +21,6 @@ class Converter {
         var i=0
         var str=""
         bitset[0]= true
-        bitset[i]
         while (wr>1){
             bitset[i] = (wr%2 == 1)
             i++
