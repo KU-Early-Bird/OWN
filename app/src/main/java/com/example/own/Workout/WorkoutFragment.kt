@@ -3,6 +3,7 @@ package com.example.own.Workout
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,40 +12,45 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.custom_dialog.view.*
-import java.text.SimpleDateFormat
-import java.util.*
-import android.os.CountDownTimer
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.example.own.DB.OwnDBHelper
 import com.example.own.R
 import com.example.own.databinding.FragmentWorkoutBinding
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.custom_dialog.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class WorkoutFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    lateinit var adapter:WorkoutAdapter
+    lateinit var adapter: WorkoutAdapter
     var _binding: FragmentWorkoutBinding? = null
-    var counter:Int = 0
-    private var isStopwatch :Boolean = true
-    private var emojiID:Int = 0
-    private var userAssessment:String = ""
-    private lateinit var dlgView:View
-    private lateinit var dlgWindow:AlertDialog
+    var counter: Int = 0
+    private var isStopwatch: Boolean = true
+    private var emojiID: Int = 0
+    private var userAssessment: String = ""
+    private lateinit var dlgView: View
+    private lateinit var dlgWindow: AlertDialog
     private lateinit var timer: CountDownTimer
     private lateinit var timerStart: Button
-    private lateinit var timerStop : Button
-    private lateinit var timerPause : Button
-    private lateinit var timerResume : Button
+    private lateinit var timerStop: Button
+    private lateinit var timerPause: Button
+    private lateinit var timerResume: Button
     lateinit var countTime: TextView
     var milileft: Long = 0
     var flagTimer: Boolean = true
-    private val workoutList=ArrayList<WorkoutData>()
+    private var workoutList = ArrayList<WorkoutData>()
     private lateinit var today: Date
-    private var todayDateInString:String = ""
+    private var todayDateInString: String = ""
+    lateinit var WorkoutDBHelper: OwnDBHelper
+    var dateToday: GregorianCalendar?=null
+    var workoutID=0
+    var progressBarCount: Int = 0
+    var progressBarSet: Int = 0
+    lateinit var test:TextView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -53,7 +59,8 @@ class WorkoutFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-        override fun onCreateView(
+
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,21 +70,112 @@ class WorkoutFragment : Fragment() {
         init()
         initWorkoutData()
         initRecyclerView()
-        initTimer()
         return root
+    }
+    public fun getTodayGregorian():GregorianCalendar{
+        val today = Calendar.getInstance()
+        return GregorianCalendar(today.get(Calendar.YEAR),today.get(Calendar.MONTH),today.get(Calendar.DAY_OF_MONTH) )
     }
 
     private fun initWorkoutData() {
-        workoutList.add(WorkoutData(1,todayDateInString, "Plank","abdominal","",2,5,"",0,0,0,false, 0,false))
-        workoutList.add(WorkoutData(2,todayDateInString, "Deadlifts","legs","",1,3,"",0,0,0,true, 0,false))
-        workoutList.add(WorkoutData(3,todayDateInString, "Calve raises","legs","",1,8,"",0,0,0,true, 0,false))
-        workoutList.add(WorkoutData(4,todayDateInString, "Chest dips","chest","",1,2,"",0,0,0,true, 0,false))
-        workoutList.add(WorkoutData(5,todayDateInString, "Pushdowns","chest","",1,100,"",0,0,0,false, 0,false))
+//        dateToday = getTodayGregorian()
+//         workoutList = WorkoutDBHelper.getRoutineWorkoutList(dateToday!!)!!
+//            for (item in workoutList) println(item )
+////    }
+        workoutList.add(
+            WorkoutData(
+                1,
+                todayDateInString,
+                "Plank",
+                "abdominal",
+                "",
+                2,
+                5,
+                "",
+                15,
+                5,
+                0,
+                false,
+                1,
+                false,
+                0,
+                "",
+                0,
+                ""
+
+            )
+        )
+        workoutList.add(
+            WorkoutData(
+                2,
+                todayDateInString,
+                "Deadlifts",
+                "legs",
+                "",
+                1,
+                3,
+                "",
+                0,
+                0,
+                0,
+                false,
+                0,
+                false,
+                0,
+                "",
+                0,
+                ""
+            )
+        )
+        workoutList.add(
+            WorkoutData(
+                3,
+                todayDateInString,
+                "Calve raises",
+                "legs",
+                "",
+                1,
+                1,
+                "",
+                0,
+                0,
+                0,
+                true,
+                0,
+                false,
+                0,
+                "",
+                0,
+                ""
+            )
+        )
+        workoutList.add(
+            WorkoutData(
+                4,
+                todayDateInString,
+                "Chest dips",
+                "chest",
+                "",
+                1,
+                2,
+                "",
+                0,
+                0,
+                0,
+                true,
+                0,
+                false,
+                0,
+                "",
+                0,
+                ""
+            )
+        )
     }
 
     private fun initTimer() {
         flagTimer = true
-        timer = object : CountDownTimer(0,0){
+        timer = object : CountDownTimer(0, 0) {
             override fun onTick(p0: Long) {
             }
             override fun onFinish() {
@@ -93,85 +191,203 @@ class WorkoutFragment : Fragment() {
         //counter = getWorkoutTimerChallenge()
 
         timerStart.setOnClickListener {
-//             stopwatch may start but will end after 10 minutes
-            if (isStopwatch) startStopwatch(600000)
-            else startTimer(10000)
+            if(workoutList[workoutID].type == 0) startStopwatch(6000000)
+            else startTimer(workoutList[workoutID].partTime.toLong())
         }
 
-        timerStop.setOnClickListener { stopTimer() }
+        timerStop.setOnClickListener {
+            if(workoutList[workoutID].isDone)
+//                Toast.makeText(binding.root.context, "운동을 완료하지 않습니다", Toast.LENGTH_LONG).show()
+//            else{
+                showDialog()
+//            }
+            stopTimer()
+        }
         timerPause.setOnClickListener { pauseTimer() }
         timerResume.setOnClickListener { resumeTimer() }
     }
 
-    private fun startTimer(milli: Long){
-        //getString()
-//        countTime.text = "00:00:10"
-//        counter = 10
-        if(milli!=milileft) counter = 10
+    private fun startTimer(milli: Long) {
+        binding.timerState.text = "TIMER"
+        if (milli != milileft)
+            counter = workoutList[workoutID].partTime
+        countTime.text = String.format(
+            "%02d:%02d:%02d", counter / 3600,
+            (counter % 3600) / 60, (counter % 60))
         flagTimer = true
 
-        timer = object : CountDownTimer(milli, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                milileft = millisUntilFinished
-                countTime.text = String.format(
-                    "%02d:%02d:%02d", counter / 3600,
-                    (counter % 3600) / 60, (counter % 60)
-                )
-                counter--
-            }
+//        if(timer == null) {
+            timer = object : CountDownTimer(milli, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    milileft = millisUntilFinished
+                    countTime.text = String.format(
+                        "%02d:%02d:%02d", counter / 3600,
+                        (counter % 3600) / 60, (counter % 60)
+                    )
+                    counter--
+                }
 
-            override fun onFinish() {
-                flagTimer = false
-                countTime.text = "00:00:00"
-                playAudio()
-                showDialog()
-                Toast.makeText(binding.root.context, "TIME IS UP!", Toast.LENGTH_LONG).show()
-            }
-        }.start()
+                override fun onFinish() {
+                    flagTimer = false
+                    countTime.text = "00:00:00"
+                    playAudio()
+                    nowCount++
+                    if (nowCount == workoutList[workoutID].count) {
+                        nowCount = 0
+                        nowSet++
+                    }
+
+                    if (nowSet == workoutList[workoutID].set) {
+                        nowSet = 0
+                        showDialog()
+                        Toast.makeText(binding.root.context, "TIME IS UP!", Toast.LENGTH_LONG)
+                            .show()
+                    }
+//                else if (nowSet!=workoutList[workoutID].set)
+                startRestTimer(workoutList[workoutID].restTime.toLong())
+                }
+            }.start()
+//        }
     }
 
-    private fun startStopwatch(milli: Long){
-        //getString()
-        //counter = getWorkoutTimerChallenge()
-        if(milli!=milileft) counter = 0
+    private fun startRestTimer(milli: Long) {
+        playAudio()
+        if (milli != milileft) counter = workoutList[workoutID].restTime
+        binding.timerState.text = "REST TIME"
+        countTime.text = String.format(
+            "%02d:%02d:%02d", counter / 3600,
+            (counter % 3600) / 60, (counter % 60))
         flagTimer = true
 
-        timer = object : CountDownTimer(milli, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                milileft = millisUntilFinished
-                countTime.text = String.format(
-                    "%02d:%02d:%02d", counter / 3600,
-                    (counter % 3600) / 60, (counter % 60)
-                )
-                if(counter!=0 && counter%30==0)playAudio()
-                counter++
-            }
+        if(timer == null) {
+            timer = object : CountDownTimer(milli, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    milileft = millisUntilFinished
+                    countTime.text = String.format(
+                        "%02d:%02d:%02d", counter / 3600,
+                        (counter % 3600) / 60, (counter % 60)
+                    )
+                    counter--
+                }
 
-            override fun onFinish() {
-                flagTimer = false
-                countTime.text = "00:00:00"
-                playAudio()
-                showDialog()
-            }
-        }.start()
+                override fun onFinish() {
+                    flagTimer = false
+                    countTime.text = "00:00:00"
+                    playAudio()
+                    nowCount++
+                    if (nowCount == workoutList[workoutID].count) {
+                        nowCount = 0
+                        nowSet++
+                    }
+
+                    if (nowSet == workoutList[workoutID].set) {
+                        nowSet = 0
+                        showDialog()
+                        Toast.makeText(binding.root.context, "TIME IS UP!", Toast.LENGTH_LONG)
+                            .show()
+                        duration =
+                            (workoutList[workoutID].partTime * workoutList[workoutID].count) * workoutList[workoutID].set
+                    }
+                    progressBarCount =
+                        progressBarCount + (nowCount / workoutList[workoutID].count) * 100
+                    workoutList[workoutID].progressBarCountText =
+                        nowCount.toString() + "/" + workoutList[workoutID].count
+                    workoutList[workoutID].progressBarCount = progressBarCount
+
+                    progressBarSet = progressBarSet + (nowSet / workoutList[workoutID].set) * 100
+                    workoutList[workoutID].progressBarSetText =
+                        nowSet.toString() + "/" + workoutList[workoutID].set
+                    workoutList[workoutID].progressBarSet = progressBarSet
+                    adapter.notifyItemChanged(workoutID)
+
+                    startTimer(workoutList[workoutID].partTime.toLong())
+                }
+            }.start()
+        }
     }
 
-    private fun pauseTimer(){
+
+    private fun startStopwatch(milli: Long) {
+        if (milli != milileft) counter = workoutList[workoutID].restTime
+        binding.timerState.text = "STOPWATCH"
+        countTime.text = "00:00:00"
+        counter = 0
+        flagTimer = true
+
+        if(timer == null) {
+            timer = object : CountDownTimer(milli, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    milileft = millisUntilFinished
+                    countTime.text = String.format(
+                        "%02d:%02d:%02d", counter / 3600,
+                        (counter % 3600) / 60, (counter % 60)
+                    )
+                    if (counter != 0 && counter % 30 == 0) playAudio()
+                    counter++
+                }
+
+                override fun onFinish() {
+                    flagTimer = false
+                    countTime.text = "00:00:00"
+                    playAudio()
+                }
+            }.start()
+        }
+        duration = counter
+    }
+
+    private fun pauseTimer() {
         timer.cancel()
         flagTimer = true
     }
 
-    private fun resumeTimer(){
-        if(flagTimer && isStopwatch) startStopwatch(milileft)
-        else if(flagTimer && !isStopwatch) startTimer(milileft)
+    private fun resumeTimer() {
+        if (flagTimer && isStopwatch) startStopwatch(milileft)
+        else if (flagTimer && !isStopwatch) startTimer(milileft)
     }
 
-    private  fun stopTimer(){
+    var nowCount: Int = 0
+    var nowSet: Int = 0
+    var duration:Int = 0
+
+    private fun stopTimer() {
+        if(workoutList[workoutID].type == 0){
+            nowCount++
+            duration += counter
+            workoutList[workoutID].count
+
+            if(nowCount == workoutList[workoutID].count){
+                nowCount = 0
+                nowSet++
+            }
+
+            if(nowSet == workoutList[workoutID].set){
+                nowSet = 0
+                showDialog()
+            }
+            else Toast.makeText(binding.root.context, "운동을 완료하지 않습니다", Toast.LENGTH_LONG).show()
+            progressBarCount = progressBarCount + (nowCount / workoutList[workoutID].count) * 100
+            workoutList[workoutID].progressBarCountText = nowCount.toString() + "/" + workoutList[workoutID].count
+            workoutList[workoutID].progressBarCount = progressBarCount
+
+            progressBarSet = progressBarSet + (nowSet / workoutList[workoutID].set) * 100
+            workoutList[workoutID].progressBarSetText = nowSet.toString() + "/" + workoutList[workoutID].set
+            workoutList[workoutID].progressBarSet = progressBarSet
+            adapter.notifyItemChanged(0)
+        }else {
+//            duration =( workoutList[workoutID].partTime * workoutList[workoutID].count ) * workoutList[workoutID].set
+            Toast.makeText(binding.root.context, "운동을 완료하지 않습니다", Toast.LENGTH_LONG).show()
+        }
+
         timer.cancel()
         timer.onFinish()
+        workoutList[workoutID].duration = String.format(
+            "%02d:%02d:%02d", duration / 3600,
+            (duration % 3600) / 60, (duration % 60)
+        )
     }
 
-    private fun playAudio(){
+    private fun playAudio() {
         val BgMusic = MediaPlayer.create(binding.root.context, R.raw.noti)
         BgMusic?.start()
     }
@@ -179,62 +395,48 @@ class WorkoutFragment : Fragment() {
     private fun initRecyclerView() {
 
         recyclerView = binding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(binding.root.context,
-            LinearLayoutManager.VERTICAL, false)
-        adapter = WorkoutAdapter(workoutList, todayDateInString)
-        recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(
+                binding.root.context,
+                LinearLayoutManager.VERTICAL, false
+            )
 
-        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or
-                ItemTouchHelper.DOWN, ItemTouchHelper.LEFT){
-            override fun onMove(
-                p0: RecyclerView,
-                p1: RecyclerView.ViewHolder,
-                p2: RecyclerView.ViewHolder
-            ): Boolean {
-                adapter.moveItem(p1.adapterPosition, p2.adapterPosition)
-                return false
+            adapter = WorkoutAdapter(workoutList, todayDateInString)
+            recyclerView.adapter = adapter
+            (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        adapter.ItemClickListener = object : WorkoutAdapter.OnItemClickListener {
+            override fun onItemClick(workoutData: WorkoutData, position: Int) {
+                workoutData.isClicked = !workoutData.isClicked
+                adapter.notifyItemChanged(position)
+                workoutID = position
+                initTimer()
             }
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                adapter.removeItem(viewHolder.adapterPosition)
+            override fun onClick(v: View?) {
             }
         }
-
-//        adapter.onItemClickListener{
-//
-//        }
-
-        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     private fun init() {
-        today = getCurrentDateTime()
-        todayDateInString = today.toString("yyyy-MM-dd")
-//        println(todayDateInString)
+    timerStart = binding.startBtn
+    timerStart.setOnClickListener {
+        Toast.makeText(binding.root.context, "운동을 하나 선택하세요", Toast.LENGTH_LONG).show()
+    }
 
 //        ===================== initialization of dialog =========================
-        dlgView = LayoutInflater.from(binding.root.context).inflate(R.layout.custom_dialog, container, false)
+        dlgView = LayoutInflater.from(binding.root.context)
+            .inflate(R.layout.custom_dialog, container, false)
         dlgWindow = AlertDialog.Builder(binding.root.context)
             .setView(dlgView)
             .setCancelable(false)
-            .setPositiveButton("확인"){
-                    dialog, _ -> dialog.dismiss()
+            .setPositiveButton("확인") { dialog, _ ->
+                dialog.dismiss()
             }.create()
-
-//        binding.dlgView.setOnClickListener {
-//          show dialog when TextView "VIEW DIALOG" is clicked
-//            showDialog()
-//        }
 
         val completeWorkoutBtn = binding.completeWorkoutBtn
         completeWorkoutBtn.setOnClickListener {
-            Toast.makeText(binding.root.context,"일기탭에 이동",Toast.LENGTH_SHORT).show()
+            Toast.makeText(binding.root.context, "일기탭에 이동", Toast.LENGTH_SHORT).show()
         }
-
-
     }
-
-    private fun showDialog(){
+    private fun showDialog() {
         dlgWindow.setOnShowListener {
             val btn = dlgWindow.getButton(AlertDialog.BUTTON_POSITIVE)
             btn.setTextColor(getColor(binding.root.context, R.color.customDarkBlue))
@@ -243,14 +445,14 @@ class WorkoutFragment : Fragment() {
             btn.setBackgroundColor(getColor(binding.root.context, R.color.customBlue))
 
             btn.setOnClickListener {
-                if(emojiID == 0){
-                    Toast.makeText(binding.root.context,"이모지를 선택하세요",Toast.LENGTH_LONG).show()
+                if (emojiID == 0) {
+                    Toast.makeText(binding.root.context, "이모지를 선택하세요", Toast.LENGTH_LONG).show()
                 } else {
                     userAssessment = dlgView.comment.text.toString()
                     dlgView.comment.text?.clear()
                     dlgWindow.dismiss()
-//                    println(emojiID)
-//                    println(userAssessment)
+                    workoutList[workoutID].emojiID = emojiID
+                    workoutList[workoutID].assessment = userAssessment
                 }
             }
         }
@@ -281,17 +483,17 @@ class WorkoutFragment : Fragment() {
         userAssessment = ""
 
         radioGroup.setOnCheckedChangeListener { radioGroup, checkedID ->
-            if(checkedID == R.id.emoji1btn){
+            if (checkedID == R.id.emoji1btn) {
                 emojiID = 1
                 btn1.background.setTint(Color.GREEN)
                 btn2.background.setTint(Color.GRAY)
                 btn3.background.setTint(Color.GRAY)
-            }else if(checkedID == R.id.emoji2btn){
+            } else if (checkedID == R.id.emoji2btn) {
                 emojiID = 2
                 btn2.background.setTint(Color.YELLOW)
                 btn1.background.setTint(Color.GRAY)
                 btn3.background.setTint(Color.GRAY)
-            }else if(checkedID == R.id.emoji3btn){
+            } else if (checkedID == R.id.emoji3btn) {
                 emojiID = 3
                 btn3.background.setTint(Color.RED)
                 btn1.background.setTint(Color.GRAY)

@@ -16,6 +16,22 @@
         android:layout_height="75dp">
 
         <TextView
+            android:id="@+id/typeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="Type: "
+            android:textAllCaps="true"
+            android:textColor="@color/customDarkEmerald"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/workoutSetText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
             android:id="@+id/workoutSetText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +55,6 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:indeterminateOnly="false"
-            android:progress="60"
             android:progressDrawable="@drawable/circle"
             android:rotation="-90"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -47,8 +62,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/workoutSetText"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.533"
-            tools:progress="60" />
+            app:layout_constraintVertical_bias="0.533" />
 
         <TextView
             android:id="@+id/workoutName"

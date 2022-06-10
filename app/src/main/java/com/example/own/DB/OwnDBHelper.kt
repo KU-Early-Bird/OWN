@@ -375,7 +375,8 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
                 var workoutData=WorkoutData(id =id,date = dateStr,workoutName = name,
                     bodyPart=bodyPart, assessment = "",count=count,restTime=restTime,partTime=partTime ,
-                    set=set,duration="", emojiID = 0, isDone = false, type = type, isSoundOn=isSoundOn )
+                    set=set,duration="", emojiID = 0, isDone = false, type = type, isClicked=false, progressBarCount = 0,
+                progressBarCountText = "", progressBarSet = 0, progressBarSetText = "")
             }while(cursor.moveToNext())
         }
 
@@ -395,8 +396,6 @@ class OwnDBHelper(val context: Context) : SQLiteOpenHelper(context, DB_NAME, nul
 
         db.close()
     }
-
-
 
     ////////////// Routine
     fun getAllRoutine(): ArrayList<RoutineData> {
